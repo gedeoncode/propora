@@ -1,0 +1,48 @@
+import { NextResponse } from "next/server";
+
+import { apiErrorResponse } from "@/lib/errors/api-error";
+import { updateLeadSchema } from "@/features/leads/schemas/lead.schema";
+import { leadService } from "@/features/leads/services/lead.service";
+
+type LeadRouteContext = {
+  params: Promise<{ id: string }>;
+};
+
+export async function GET(
+  _request: Request,
+  context: LeadRouteContext,
+) {
+  try {
+    const { id } = await context.params;
+
+    const lead = await leadService.getById(id);
+
+    return NextResponse.json({
+      success: true,
+      data: lead,
+    });
+  } catch (error) {
+    return apiErrorResponse(error);
+  }
+}
+
+export async function PATCH(
+  request: Request,
+  context: LeadRouteContext,
+) {
+  try {
+    const { id } = await context.params;
+
+    const body: unknown = await request.json();
+    const input = updateLeadSchema.parse(body);
+
+    const lead = await leadService.update(id, input);
+
+    return NextResponse.json({
+      success: true,
+      data: lead,
+    });
+  } catch (error) {
+    return apiErrorResponse(error);
+  }
+}

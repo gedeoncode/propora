@@ -194,13 +194,13 @@ const PropertySchema = new Schema(
 
     assignedAgentId: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Agent",
       default: null,
     },
 
     createdBy: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Agent",
       required: true,
     },
 
