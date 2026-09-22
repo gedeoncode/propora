@@ -6,7 +6,7 @@ const serverEnvSchema = z.object({
 
   MONGODB_URI: z.string(),
 
-  AUTH_SECRET: z.string().optional(),
+  AUTH_SECRET: z.string().min(32),
   AUTH_URL: z.string().url().optional(),
 
   REDIS_URL: z.string().optional(),
