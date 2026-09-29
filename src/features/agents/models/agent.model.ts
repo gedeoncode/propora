@@ -17,29 +17,6 @@ const AgentSchema = new Schema(
       index: true,
     },
 
-    firstName: {
-      type: String,
-      required: true,
-      trim: true,
-      minlength: 1,
-      maxlength: 100,
-    },
-
-    lastName: {
-      type: String,
-      required: true,
-      trim: true,
-      minlength: 1,
-      maxlength: 100,
-    },
-
-    phone: {
-      type: String,
-      trim: true,
-      maxlength: 30,
-      default: null,
-    },
-
     bio: {
       type: String,
       trim: true,

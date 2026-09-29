@@ -25,6 +25,7 @@ export type UserRecord = {
   lastName: string;
 
   email: string;
+  phone?: string | null;
 
   passwordHash: string;
 

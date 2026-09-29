@@ -170,8 +170,6 @@ export const propertyService = {
       );
     }
 
-    // Basic publication requirements. Adjust these rules as the product
-    // requirements become more specific.
     if (
       !property.title.trim() ||
       !property.description.trim() ||

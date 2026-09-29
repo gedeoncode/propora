@@ -1,22 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { AppError } from "@/lib/errors/app-error";
 import { apiErrorResponse } from "@/lib/errors/api-error";
+import { AppError } from "@/lib/errors/app-error";
+import { requireRole } from "@/lib/auth/guards";
 
-import { AGENT_STATUSES } from "@/features/agents/types/agent";
 import { agentService } from "@/features/agents/services/agent.service";
-import { createAgentSchema } from "@/features/agents/schemas/agent.schema";
+import { createAgentWithUserSchema } from "@/features/agents/schemas/agent.schema";
+import { AGENT_STATUSES } from "@/features/agents/types/agent";
+
+function isAgentStatus(
+  value: string,
+): value is (typeof AGENT_STATUSES)[number] {
+  return AGENT_STATUSES.includes(
+    value as (typeof AGENT_STATUSES)[number],
+  );
+}
 
 export async function GET(request: NextRequest) {
   try {
     const status = request.nextUrl.searchParams.get("status");
 
-    if (
-      status &&
-      !AGENT_STATUSES.includes(
-        status as (typeof AGENT_STATUSES)[number],
-      )
-    ) {
+    if (status && !isAgentStatus(status)) {
       throw new AppError(
         "VALIDATION_ERROR",
         "Invalid agent status.",
@@ -36,20 +40,31 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/v1/agents
-
 export async function POST(request: NextRequest) {
   try {
+    await requireRole(["admin", "manager", "staff"]);
+
     const body: unknown = await request.json();
 
-    const input = createAgentSchema.parse(body);
+    const input = createAgentWithUserSchema.parse(body);
 
-    const agent = await agentService.create(input);
+    const result = await agentService.createWithUser(input);
 
     return NextResponse.json(
       {
         success: true,
-        data: agent,
+        data: {
+          user: {
+            id: result.user._id.toString(),
+            firstName: result.user.firstName,
+            lastName: result.user.lastName,
+            email: result.user.email,
+            role: result.user.role,
+            status: result.user.status,
+            createdAt: result.user.createdAt,
+          },
+          agent: result.agent,
+        },
       },
       { status: 201 },
     );

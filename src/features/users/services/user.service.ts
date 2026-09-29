@@ -17,6 +17,7 @@ import {
 import { userRepository } from "@/features/users/repositories/user.repository";
 import { hashPassword, verifyPassword } from "@/lib/auth/password";
 import { AppError } from "@/lib/errors/app-error";
+import { logger } from "@/lib/logger";
 
 function assertValidObjectId(
   id: string,
@@ -35,6 +36,10 @@ export const userService = {
     assertValidObjectId(id, "user ID");
 
     const user = await userRepository.findById(id);
+    // logger.info(`Retrieved user by ID: ${id}`, {
+    //   userId: id,
+    //   userExists: !!user,
+    // });
 
     if (!user) {
       throw new AppError("NOT_FOUND", "User not found.");

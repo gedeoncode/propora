@@ -1,14 +1,13 @@
 import "server-only";
 
+import type { ClientSession } from "mongoose";
+
 import User from "@/features/users/models/user.model";
 import type {
   RegisterUserInput,
   UpdateUserInput,
 } from "@/features/users/schemas/user.schema";
-import type {
-  UserRole,
-  UserStatus,
-} from "@/features/users/types/user";
+import type { UserRole, UserStatus } from "@/features/users/types/user";
 
 export type UserListFilters = {
   role?: UserRole;
@@ -27,12 +26,6 @@ export const userRepository = {
     }).exec();
   },
 
-  /**
-   * Credential lookup intentionally includes passwordHash.
-   *
-   * The User model marks passwordHash with select: false so that
-   * normal User queries cannot accidentally expose it.
-   */
   async findByEmailWithPassword(email: string) {
     return User.findOne({
       email: email.toLowerCase(),
@@ -57,24 +50,9 @@ export const userRepository = {
 
       if (search) {
         query.$or = [
-          {
-            firstName: {
-              $regex: search,
-              $options: "i",
-            },
-          },
-          {
-            lastName: {
-              $regex: search,
-              $options: "i",
-            },
-          },
-          {
-            email: {
-              $regex: search,
-              $options: "i",
-            },
-          },
+          { firstName: { $regex: search, $options: "i" } },
+          { lastName: { $regex: search, $options: "i" } },
+          { email: { $regex: search, $options: "i" } },
         ];
       }
     }
@@ -88,14 +66,17 @@ export const userRepository = {
     input: Omit<RegisterUserInput, "password"> & {
       passwordHash: string;
     },
+    session?: ClientSession,
   ) {
+    if (session) {
+      const [user] = await User.create([input], { session });
+      return user;
+    }
+
     return User.create(input);
   },
 
-  async updateById(
-    id: string,
-    input: UpdateUserInput,
-  ) {
+  async updateById(id: string, input: UpdateUserInput) {
     return User.findByIdAndUpdate(id, input, {
       new: true,
       runValidators: true,
@@ -113,10 +94,7 @@ export const userRepository = {
     ).exec();
   },
 
-  async updateStatus(
-    id: string,
-    status: UserStatus,
-  ) {
+  async updateStatus(id: string, status: UserStatus) {
     return User.findByIdAndUpdate(
       id,
       { status },
@@ -130,11 +108,10 @@ export const userRepository = {
   async updateLastLogin(id: string) {
     return User.findByIdAndUpdate(
       id,
-      {
-        lastLoginAt: new Date(),
-      },
+      { lastLoginAt: new Date() },
       {
         new: true,
+        runValidators: true,
       },
     ).exec();
   },

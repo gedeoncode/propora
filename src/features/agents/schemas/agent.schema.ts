@@ -6,58 +6,52 @@ import {
 } from "@/features/agents/types/agent";
 
 const optionalTrimmedString = (max: number) =>
-  z
-    .string()
-    .trim()
-    .max(max)
-    .optional();
+  z.string().trim().max(max).optional();
 
 export const createAgentSchema = z.object({
   userId: z.string().min(1),
-
-  firstName: z.string().trim().min(1).max(100),
-
-  lastName: z.string().trim().min(1).max(100),
-
-  phone: optionalTrimmedString(30),
-
   bio: optionalTrimmedString(2000),
-
-  profileImageUrl: z
-    .string()
-    .url()
-    .optional(),
-
+  profileImageUrl: z.string().url().optional(),
   licenseNumber: optionalTrimmedString(100),
-
   specializations: z
     .array(z.enum(AGENT_SPECIALIZATIONS))
     .max(20)
     .default([]),
-
-  status: z
-    .enum(AGENT_STATUSES)
-    .default("active"),
+  status: z.enum(AGENT_STATUSES).default("active"),
 });
 
-export const updateAgentSchema = createAgentSchema
-  .omit({
-    userId: true,
-  })
-  .partial();
+export const createAgentWithUserSchema = z.object({
+  firstName: z.string().trim().min(1).max(100),
+  lastName: z.string().trim().min(1).max(100),
+  email: z.string().trim().email(),
+  password: z.string().min(8).max(128),
+  phone: optionalTrimmedString(30),
+  bio: optionalTrimmedString(2000),
+  profileImageUrl: z.string().url().optional(),
+  licenseNumber: optionalTrimmedString(100),
+  specializations: z
+    .array(z.enum(AGENT_SPECIALIZATIONS))
+    .max(20)
+    .default([]),
+});
+
+export const updateAgentSchema =
+  createAgentSchema
+    .omit({ userId: true })
+    .partial();
 
 export const updateAgentStatusSchema = z.object({
   status: z.enum(AGENT_STATUSES),
 });
 
-export type CreateAgentInput = z.infer<
-  typeof createAgentSchema
->;
+export type CreateAgentInput =
+  z.infer<typeof createAgentSchema>;
 
-export type UpdateAgentInput = z.infer<
-  typeof updateAgentSchema
->;
+export type CreateAgentWithUserInput =
+  z.infer<typeof createAgentWithUserSchema>;
 
-export type UpdateAgentStatusInput = z.infer<
-  typeof updateAgentStatusSchema
->;
+export type UpdateAgentInput =
+  z.infer<typeof updateAgentSchema>;
+
+export type UpdateAgentStatusInput =
+  z.infer<typeof updateAgentStatusSchema>;

@@ -2,10 +2,7 @@ import "server-only";
 
 import mongoose, { Schema } from "mongoose";
 
-import {
-  USER_ROLES,
-  USER_STATUSES,
-} from "@/features/users/types/user";
+import { USER_ROLES, USER_STATUSES } from "@/features/users/types/user";
 
 const UserSchema = new Schema(
   {
@@ -33,6 +30,12 @@ const UserSchema = new Schema(
       lowercase: true,
       maxlength: 254,
       index: true,
+    },
+    phone: {
+      type: String,
+      trim: true,
+      maxlength: 30,
+      default: null,
     },
 
     passwordHash: {
@@ -73,8 +76,6 @@ UserSchema.index({
   role: 1,
 });
 
-const User =
-  mongoose.models.User ||
-  mongoose.model("User", UserSchema);
+const User = mongoose.models.User || mongoose.model("User", UserSchema);
 
 export default User;

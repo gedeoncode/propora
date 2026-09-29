@@ -7,6 +7,7 @@ import type {
   UserRole,
   UserStatus,
 } from "@/features/users/types/user";
+import { logger } from "../logger";
 
 export type AuthenticatedUser = {
   id: string;
@@ -46,6 +47,7 @@ export async function requireRole(
   allowedRoles: readonly UserRole[],
 ): Promise<AuthenticatedUser> {
   const user = await requireAuth();
+    logger.info(`User role: ${user.role}, Allowed roles: ${allowedRoles.join(", ")}`);
 
   if (!allowedRoles.includes(user.role)) {
     throw new AppError(

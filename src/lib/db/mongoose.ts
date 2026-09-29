@@ -44,3 +44,22 @@ export async function connectToDatabase(): Promise<typeof mongoose> {
 
   return cached.conn;
 }
+
+export async function withTransaction<T>(
+  callback: (session: mongoose.ClientSession) => Promise<T>,
+): Promise<T> {
+  const db = await connectToDatabase();
+  const session = await db.startSession();
+
+  try {
+    let result!: T;
+
+    await session.withTransaction(async () => {
+      result = await callback(session);
+    });
+
+    return result;
+  } finally {
+    await session.endSession();
+  }
+}

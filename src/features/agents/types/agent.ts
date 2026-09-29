@@ -30,11 +30,6 @@ export type AgentRecord = {
    * authentication/account identity.
    */
   userId: Types.ObjectId;
-
-  firstName: string;
-  lastName: string;
-
-  phone?: string | null;
   bio?: string | null;
   profileImageUrl?: string | null;
   licenseNumber?: string | null;
@@ -43,6 +38,24 @@ export type AgentRecord = {
 
   status: AgentStatus;
 
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+// user agent record type for the agent service
+export type Agent = {
+  _id: string;  
+  userId: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    phone?: string | null;
+  };
+  bio?: string | null;
+  profileImageUrl?: string | null;
+  licenseNumber?: string | null;
+  specializations: AgentSpecialization[];
+  status: AgentStatus;
   createdAt: Date;
   updatedAt: Date;
 };

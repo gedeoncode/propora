@@ -3,7 +3,6 @@ import "server-only";
 import { z } from "zod";
 
 const serverEnvSchema = z.object({
-
   MONGODB_URI: z.string(),
 
   AUTH_SECRET: z.string().min(32),
@@ -13,6 +12,10 @@ const serverEnvSchema = z.object({
 
   MEDIA_STORAGE_URL: z.string().optional(),
   MEDIA_STORAGE_KEY: z.string().optional(),
+
+  CLOUDINARY_CLOUD_NAME: z.string().min(1),
+  CLOUDINARY_API_KEY: z.string().min(1),
+  CLOUDINARY_API_SECRET: z.string().min(1),
 
   EMAIL_PROVIDER_API_KEY: z.string().optional(),
   EMAIL_FROM: z.string().email().optional(),

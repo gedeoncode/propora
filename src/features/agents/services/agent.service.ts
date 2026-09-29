@@ -1,17 +1,21 @@
 import "server-only";
 
-import { AppError } from "@/lib/errors/app-error";
-
 import {
   createAgentSchema,
+  createAgentWithUserSchema,
   updateAgentSchema,
   updateAgentStatusSchema,
   type CreateAgentInput,
+  type CreateAgentWithUserInput,
   type UpdateAgentInput,
   type UpdateAgentStatusInput,
 } from "@/features/agents/schemas/agent.schema";
-
 import { agentRepository } from "@/features/agents/repositories/agent.repository";
+import { userRepository } from "@/features/users/repositories/user.repository";
+import { registerUserSchema } from "@/features/users/schemas/user.schema";
+import { hashPassword } from "@/lib/auth/password";
+import { withTransaction } from "@/lib/db/mongoose";
+import { AppError } from "@/lib/errors/app-error";
 
 export const agentService = {
   async getById(id: string) {
@@ -58,6 +62,67 @@ export const agentService = {
     }
 
     return agentRepository.create(data);
+  },
+
+  async createWithUser(input: CreateAgentWithUserInput) {
+    const data = createAgentWithUserSchema.parse(input);
+
+    const userData = registerUserSchema.parse({
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      password: data.password,
+      role: "agent",
+    });
+
+    const existingUser =
+      await userRepository.existsByEmail(userData.email);
+
+    if (existingUser) {
+      throw new AppError(
+        "CONFLICT",
+        "An account with this email already exists.",
+      );
+    }
+
+    const passwordHash = await hashPassword(
+      userData.password,
+    );
+
+    return withTransaction(async (session) => {
+      const user = await userRepository.create(
+        {
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          email: userData.email,
+          role: "agent",
+          passwordHash,
+        },
+        session,
+      );
+
+      const agentData = createAgentSchema.parse({
+        userId: user._id.toString(),
+        firstName: data.firstName,
+        lastName: data.lastName,
+        phone: data.phone,
+        bio: data.bio,
+        profileImageUrl: data.profileImageUrl,
+        licenseNumber: data.licenseNumber,
+        specializations: data.specializations,
+        status: "active",
+      });
+
+      const agent = await agentRepository.create(
+        agentData,
+        session,
+      );
+
+      return {
+        user,
+        agent,
+      };
+    });
   },
 
   async update(
