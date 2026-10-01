@@ -27,9 +27,13 @@ export const createLeadSchema = z.object({
   notes: optionalTrimmedString(5000),
 });
 
+  
 export const updateLeadSchema = createLeadSchema
   .omit({ status: true })
-  .partial();
+  .partial()
+  .extend({
+    assignedAgentId: z.string().min(1).nullable().optional(),
+  });
 
 export const updateLeadStatusSchema = z.object({
   status: z.enum(LEAD_STATUSES),

@@ -290,4 +290,35 @@ export const viewingService = {
 
     return updatedViewing;
   },
+
+  async delete(id: string) {
+    assertValidObjectId(id, "viewing ID");
+
+    const existingViewing = await viewingRepository.findById(id);
+
+    if (!existingViewing) {
+      throw new AppError("NOT_FOUND", "Viewing not found.");
+    }
+
+    const nonDeletableStatuses = ["completed", "cancelled", "no_show"] as const;
+
+    if (
+      nonDeletableStatuses.includes(
+        existingViewing.status as (typeof nonDeletableStatuses)[number],
+      )
+    ) {
+      throw new AppError(
+        "CONFLICT",
+        "Completed, cancelled, and no-show viewings cannot be deleted.",
+      );
+    }
+
+    const deletedViewing = await viewingRepository.deleteById(id);
+
+    if (!deletedViewing) {
+      throw new AppError("NOT_FOUND", "Viewing not found.");
+    }
+
+    return deletedViewing;
+  },
 };

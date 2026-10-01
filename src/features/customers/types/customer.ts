@@ -1,3 +1,4 @@
+
 import type { Types } from "mongoose";
 
 export const CUSTOMER_STATUSES = [
@@ -19,19 +20,23 @@ export const CUSTOMER_TYPES = [
 
 export type CustomerType = (typeof CUSTOMER_TYPES)[number];
 
-export type CustomerRecord = {
-  _id: Types.ObjectId;
-
+export type CustomerContact = {
   firstName: string;
   lastName: string;
   email?: string | null;
   phone?: string | null;
+};
+
+export type CustomerRecord = {
+  _id: Types.ObjectId;
+
+  userId?: Types.ObjectId | null;
+  contact?: CustomerContact | null;
 
   customerType: CustomerType;
   status: CustomerStatus;
 
   assignedAgentId?: Types.ObjectId | null;
-
   sourceLeadId?: Types.ObjectId | null;
 
   notes?: string | null;

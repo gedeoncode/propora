@@ -161,4 +161,4 @@ Do not claim something was tested unless it was actually verified from the avail
 
 I prefer working **one step at a time**. When I say **"next"**, continue with the next logical implementation step.
 
-The goal is to continue Propora as though you were joining an existing development team: **preserve what is already good, improve what genuinely needs improvement, and maintain one coherent product across the entire codebase and UI.**
+The goal is to continue Propora as though you were joining an existing development team: preserve what is already good, improve what genuinely needs improvement, and maintain one coherent product across the entire codebase and UI.**

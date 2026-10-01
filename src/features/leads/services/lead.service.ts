@@ -20,6 +20,8 @@ import {
 import { propertyRepository } from "@/features/properties/repositories/property.repository";
 import { AppError } from "@/lib/errors/app-error";
 import { leadRepository } from "@/features/leads/repositories/lead.repository";
+import { viewingRepository } from "@/features/viewings/repositories/viewing.repository";
+import { customerRepository } from "@/features/customers/repositories/customer.repository";
 
 const TERMINAL_LEAD_STATUSES: LeadStatus[] = ["converted", "lost"];
 
@@ -205,5 +207,54 @@ export const leadService = {
     }
 
     return updatedLead;
+  },
+
+    async delete(id: string) {
+    assertValidObjectId(id, "lead ID");
+
+    const existingLead = await leadRepository.findById(id);
+
+    if (!existingLead) {
+      throw new AppError("NOT_FOUND", "Lead not found.");
+    }
+
+    if (existingLead.status === "converted") {
+      throw new AppError(
+        "CONFLICT",
+        "Converted leads cannot be deleted.",
+      );
+    }
+
+    const [customerExists, viewingExists] =
+      await Promise.all([
+        customerRepository.existsBySourceLeadId(id),
+        viewingRepository.existsByLeadId(id),
+      ]);
+
+    if (customerExists) {
+      throw new AppError(
+        "CONFLICT",
+        "This lead is linked to a customer and cannot be deleted.",
+      );
+    }
+
+    if (viewingExists) {
+      throw new AppError(
+        "CONFLICT",
+        "This lead is referenced by one or more viewings and cannot be deleted.",
+      );
+    }
+
+    const deletedLead =
+      await leadRepository.deleteById(id);
+
+    if (!deletedLead) {
+      throw new AppError(
+        "NOT_FOUND",
+        "Lead not found.",
+      );
+    }
+
+    return deletedLead;
   },
 };

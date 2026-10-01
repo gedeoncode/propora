@@ -17,13 +17,40 @@ export type CustomerListFilters = {
   sourceLeadId?: string;
 };
 
+const customerPopulate = [
+  {
+    path: "userId",
+    select: "firstName lastName email phone",
+  },
+  {
+    path: "assignedAgentId",
+    select: "userId",
+    populate: {
+      path: "userId",
+      select: "firstName lastName email phone",
+    },
+  },
+  {
+    path: "sourceLeadId",
+    select: "firstName lastName email phone status source",
+  },
+];
+
 export const customerRepository = {
   async findById(id: string) {
-    return Customer.findById(id).exec();
+    return Customer.findById(id).populate(customerPopulate).exec();
   },
 
   async findBySourceLeadId(sourceLeadId: string) {
     return Customer.findOne({ sourceLeadId }).exec();
+  },
+
+  async existsBySourceLeadId(sourceLeadId: string) {
+    return Customer.exists({ sourceLeadId });
+  },
+
+  async findByUserId(userId: string) {
+    return Customer.findOne({ userId }).exec();
   },
 
   async list(filters: CustomerListFilters = {}) {
@@ -46,19 +73,62 @@ export const customerRepository = {
     }
 
     return Customer.find(query)
+      .populate(customerPopulate)
       .sort({ createdAt: -1 })
       .exec();
   },
 
   async create(input: CreateCustomerInput) {
-    return Customer.create(input);
+    const customer = await Customer.create(input);
+
+    return Customer.findById(customer._id).populate(customerPopulate).exec();
   },
 
   async updateById(id: string, input: UpdateCustomerInput) {
-    return Customer.findByIdAndUpdate(id, input, {
+    const { userId, contact, ...fields } = input;
+
+    const update: {
+      $set: Record<string, unknown>;
+      $unset: Record<string, 1>;
+    } = {
+      $set: { ...fields },
+      $unset: {},
+    };
+
+    // Switch to a registered user.
+    if (userId) {
+      update.$set.userId = userId;
+      update.$unset.contact = 1;
+    }
+
+    // Switch to a CRM-only contact.
+    if (contact) {
+      update.$set.contact = contact;
+      update.$unset.userId = 1;
+    }
+
+    if (Object.keys(update.$set).length === 0) {
+      delete (
+        update as {
+          $set?: Record<string, unknown>;
+        }
+      ).$set;
+    }
+
+    if (Object.keys(update.$unset).length === 0) {
+      delete (
+        update as {
+          $unset?: Record<string, 1>;
+        }
+      ).$unset;
+    }
+
+    return Customer.findByIdAndUpdate(id, update, {
       new: true,
       runValidators: true,
-    }).exec();
+    })
+      .populate(customerPopulate)
+      .exec();
   },
 
   async updateStatus(id: string, status: CustomerStatus) {
@@ -69,13 +139,12 @@ export const customerRepository = {
         new: true,
         runValidators: true,
       },
-    ).exec();
+    )
+      .populate(customerPopulate)
+      .exec();
   },
 
-  async assignAgent(
-    id: string,
-    assignedAgentId: string | null,
-  ) {
+  async assignAgent(id: string, assignedAgentId: string | null) {
     return Customer.findByIdAndUpdate(
       id,
       { assignedAgentId },
@@ -83,6 +152,8 @@ export const customerRepository = {
         new: true,
         runValidators: true,
       },
-    ).exec();
+    )
+      .populate(customerPopulate)
+      .exec();
   },
 };

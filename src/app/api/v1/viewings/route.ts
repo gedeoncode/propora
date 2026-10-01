@@ -8,6 +8,8 @@ import {
   VIEWING_TYPES,
 } from "@/features/viewings/types/viewing";
 import { viewingService } from "@/features/viewings/services/viewing.service";
+import { requireRole } from "@/lib/auth/guards";
+import { connectToDatabase } from "@/lib/db/mongoose";
 
 function isViewingStatus(
   value: string,
@@ -104,8 +106,12 @@ export async function GET(request: NextRequest) {
   }
 }
 
+
 export async function POST(request: NextRequest) {
   try {
+    await requireRole(["admin", "manager", "agent", "staff"]);
+    await connectToDatabase();
+
     const body: unknown = await request.json();
     const input = createViewingSchema.parse(body);
 

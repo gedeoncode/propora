@@ -1,13 +1,18 @@
+
 import { NextRequest, NextResponse } from "next/server";
 
-import { apiErrorResponse } from "@/lib/errors/api-error";
-import { AppError } from "@/lib/errors/app-error";
-import { createCustomerSchema } from "@/features/customers/schemas/customer.schema";
+import {
+  createCustomerSchema,
+} from "@/features/customers/schemas/customer.schema";
 import {
   CUSTOMER_STATUSES,
   CUSTOMER_TYPES,
 } from "@/features/customers/types/customer";
 import { customerService } from "@/features/customers/services/customer.service";
+import { connectToDatabase } from "@/lib/db/mongoose";
+import { requireRole } from "@/lib/auth/guards";
+import { apiErrorResponse } from "@/lib/errors/api-error";
+import { AppError } from "@/lib/errors/app-error";
 
 function isCustomerStatus(
   value: string,
@@ -27,6 +32,9 @@ function isCustomerType(
 
 export async function GET(request: NextRequest) {
   try {
+    await requireRole(["admin", "manager", "agent"]);
+    await connectToDatabase();
+
     const searchParams = request.nextUrl.searchParams;
 
     const status = searchParams.get("status");
@@ -51,8 +59,10 @@ export async function GET(request: NextRequest) {
     }
 
     const customers = await customerService.list({
-      status: status ?? undefined,
-      customerType: customerType ?? undefined,
+      status: status ? (status as (typeof CUSTOMER_STATUSES)[number]) : undefined,
+      customerType: customerType
+        ? (customerType as (typeof CUSTOMER_TYPES)[number])
+        : undefined,
       assignedAgentId,
       sourceLeadId,
     });
@@ -68,6 +78,9 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    await requireRole(["admin", "manager", "agent"]);
+    await connectToDatabase();
+
     const body: unknown = await request.json();
     const input = createCustomerSchema.parse(body);
 

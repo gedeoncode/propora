@@ -7,6 +7,8 @@ import {
   AGENT_SPECIALIZATIONS,
   AGENT_STATUSES,
 } from "@/features/agents/types/agent";
+import { PageHeader } from "@/components/layout/page-header";
+import { StatusBadge } from "@/components/ui/status-badge";
 
 type SearchParams = {
   status?: string;
@@ -18,16 +20,19 @@ function formatLabel(value: string) {
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
-function getStatusClassName(status: string) {
+function getAgentStatusVariant(status: string) {
   switch (status) {
     case "active":
-      return "bg-emerald-500/10 text-emerald-700";
+      return "success" as const;
+
     case "inactive":
-      return "bg-muted text-muted-foreground";
+      return "neutral" as const;
+
     case "suspended":
-      return "bg-destructive/10 text-destructive";
+      return "danger" as const;
+
     default:
-      return "bg-muted text-muted-foreground";
+      return "neutral" as const;
   }
 }
 
@@ -52,34 +57,21 @@ export default async function AgentsPage({
 
   return (
     <main className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">
-            Agents
-          </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Manage the professional agent profiles connected to Propora
-            accounts.
-          </p>
-        </div>
-
-        <Link
-          href="/agents/new"
-          className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
-        >
-          Add agent
-        </Link>
-      </div>
+      <PageHeader
+        title="Agents"
+        description="Manage the professional agent profiles connected to Propora accounts."
+        action={{
+          href: "/agents/new",
+          label: "Add agent",
+        }}
+      />
 
       <section className="rounded-xl border border-border bg-card">
         <div className="flex flex-col gap-4 border-b border-border p-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <h2 className="text-sm font-semibold">
-              Agent directory
-            </h2>
+            <h2 className="text-sm font-semibold">Agent directory</h2>
             <p className="mt-1 text-xs text-muted-foreground">
-              {agents.length}{" "}
-              {agents.length === 1 ? "agent" : "agents"}
+              {agents.length} {agents.length === 1 ? "agent" : "agents"}
               {status ? ` · ${formatLabel(status)}` : ""}
             </p>
           </div>
@@ -114,12 +106,9 @@ export default async function AgentsPage({
 
         {agents.length === 0 ? (
           <div className="p-10 text-center">
-            <h3 className="text-sm font-semibold">
-              No agents found
-            </h3>
+            <h3 className="text-sm font-semibold">No agents found</h3>
             <p className="mt-1 text-sm text-muted-foreground">
-              There are no agent profiles matching the selected
-              status.
+              There are no agent profiles matching the selected status.
             </p>
 
             <Link
@@ -131,27 +120,15 @@ export default async function AgentsPage({
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[760px] text-sm">
+            <table className="w-full min-w-190 text-sm">
               <thead>
                 <tr className="border-b border-border text-left text-xs text-muted-foreground">
-                  <th className="px-4 py-3 font-medium">
-                    Agent
-                  </th>
-                  <th className="px-4 py-3 font-medium">
-                    Contact
-                  </th>
-                  <th className="px-4 py-3 font-medium">
-                    Specializations
-                  </th>
-                  <th className="px-4 py-3 font-medium">
-                    License
-                  </th>
-                  <th className="px-4 py-3 font-medium">
-                    Status
-                  </th>
-                  <th className="px-4 py-3 font-medium">
-                    Action
-                  </th>
+                  <th className="px-4 py-3 font-medium">Agent</th>
+                  <th className="px-4 py-3 font-medium">Contact</th>
+                  <th className="px-4 py-3 font-medium">Specializations</th>
+                  <th className="px-4 py-3 font-medium">License</th>
+                  <th className="px-4 py-3 font-medium">Status</th>
+                  <th className="px-4 py-3 font-medium">Action</th>
                 </tr>
               </thead>
 
@@ -180,25 +157,21 @@ export default async function AgentsPage({
                       {agent.phone ? (
                         <span>{agent.phone}</span>
                       ) : (
-                        <span className="text-muted-foreground">
-                          No phone
-                        </span>
+                        <span className="text-muted-foreground">No phone</span>
                       )}
                     </td>
 
                     <td className="px-4 py-4">
-                      <div className="flex max-w-[260px] flex-wrap gap-1.5">
+                      <div className="flex max-w-65 flex-wrap gap-1.5">
                         {agent.specializations.length > 0 ? (
-                          agent.specializations.map(
-                            (specialization) => (
-                              <span
-                                key={specialization}
-                                className="rounded-full bg-muted px-2 py-1 text-xs"
-                              >
-                                {formatLabel(specialization)}
-                              </span>
-                            ),
-                          )
+                          agent.specializations.map((specialization) => (
+                            <span
+                              key={specialization}
+                              className="rounded-full bg-muted px-2 py-1 text-xs"
+                            >
+                              {formatLabel(specialization)}
+                            </span>
+                          ))
                         ) : (
                           <span className="text-xs text-muted-foreground">
                             None
@@ -218,13 +191,11 @@ export default async function AgentsPage({
                     </td>
 
                     <td className="px-4 py-4">
-                      <span
-                        className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${getStatusClassName(
-                          agent.status,
-                        )}`}
+                      <StatusBadge
+                        variant={getAgentStatusVariant(agent.status)}
                       >
                         {formatLabel(agent.status)}
-                      </span>
+                      </StatusBadge>
                     </td>
 
                     <td className="px-4 py-4">

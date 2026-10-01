@@ -57,17 +57,26 @@ export const viewingRepository = {
       query.scheduledAt = {};
 
       if (filters.from) {
-        (query.scheduledAt as Record<string, Date>).$gte =
-          filters.from;
+        (query.scheduledAt as Record<string, Date>).$gte = filters.from;
       }
 
       if (filters.to) {
-        (query.scheduledAt as Record<string, Date>).$lte =
-          filters.to;
+        (query.scheduledAt as Record<string, Date>).$lte = filters.to;
       }
     }
 
     return Viewing.find(query)
+      .populate("propertyId", "title location")
+      .populate({
+        path: "agentId",
+        select: "userId",
+        populate: {
+          path: "userId",
+          select: "firstName lastName",
+        },
+      })
+      .populate("customerId", "firstName lastName")
+      .populate("leadId", "firstName lastName")
       .sort({ scheduledAt: 1 })
       .exec();
   },
@@ -100,14 +109,15 @@ export const viewingRepository = {
       .sort({ scheduledAt: 1 })
       .exec();
 
-    return candidates.find((viewing) => {
-      const viewingEnd = new Date(
-        viewing.scheduledAt.getTime() +
-          viewing.durationMinutes * 60_000,
-      );
+    return (
+      candidates.find((viewing) => {
+        const viewingEnd = new Date(
+          viewing.scheduledAt.getTime() + viewing.durationMinutes * 60_000,
+        );
 
-      return viewingEnd > scheduledAt;
-    }) ?? null;
+        return viewingEnd > scheduledAt;
+      }) ?? null
+    );
   },
 
   async create(input: CreateViewingInput) {
@@ -143,5 +153,13 @@ export const viewingRepository = {
       new: true,
       runValidators: true,
     }).exec();
+  },
+
+  async existsByLeadId(leadId: string) {
+    return Viewing.exists({ leadId });
+  },
+
+  async deleteById(id: string) {
+    return Viewing.findByIdAndDelete(id).exec();
   },
 };

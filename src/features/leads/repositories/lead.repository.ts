@@ -78,4 +78,8 @@ export const leadRepository = {
       },
     ).exec();
   },
+
+  async deleteById(id: string) {
+  return Lead.findByIdAndDelete(id).exec();
+},
 };
