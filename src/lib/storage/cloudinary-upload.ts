@@ -1,6 +1,7 @@
 import "server-only";
 
 import { cloudinary } from "./cloudinary";
+import { clientEnv } from "@/config/env.client";
 
 const MAX_PROPERTY_IMAGE_SIZE = 10 * 1024 * 1024;
 
@@ -40,7 +41,7 @@ export async function uploadPropertyImage(
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       {
-        folder: "propora/properties",
+        folder: `${clientEnv.NEXT_PUBLIC_APP_NAME}/properties`,
         resource_type: "image",
       },
       (error, result) => {

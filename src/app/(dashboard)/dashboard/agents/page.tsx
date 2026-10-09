@@ -59,7 +59,7 @@ export default async function AgentsPage({
     <main className="space-y-6">
       <PageHeader
         title="Agents"
-        description="Manage the professional agent profiles connected to Propora accounts."
+        description={`Manage the professional agent profiles connected to ${clientEnv.NEXT_PUBLIC_APP_NAME} accounts.`}
         action={{
           href: "/agents/new",
           label: "Add agent",

@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 
 import { cn } from "cn";
+import { clientEnv } from "@/config/env.client";
 
 type DashboardAccountMenuProps = {
   displayName: string;
@@ -137,7 +138,7 @@ export function DashboardAccountMenu({
                 {roleLabel}
               </p>
               <p className="mt-1 text-xs text-muted-foreground">
-                Signed in to Propora
+                Signed in to {clientEnv.NEXT_PUBLIC_APP_NAME}
               </p>
             </div>
           </div>

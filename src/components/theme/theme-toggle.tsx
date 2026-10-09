@@ -5,8 +5,9 @@ import { Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
+import { clientEnv } from "@/config/env.client";
 
-const THEME_STORAGE_KEY = "propora-theme";
+const THEME_STORAGE_KEY = `${clientEnv.NEXT_PUBLIC_APP_NAME}-theme`;
 
 type Theme = "light" | "dark";
 

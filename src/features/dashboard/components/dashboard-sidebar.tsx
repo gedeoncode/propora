@@ -12,13 +12,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "cn";
 import { DashboardNavigation } from "./dashboard-navigation";
+import { clientEnv, clientEnv } from "@/config/env.client";
 
 type DashboardSidebarProps = {
   displayName: string;
   roleLabel: string;
 };
 
-const STORAGE_KEY = "propora-sidebar-collapsed";
+const STORAGE_KEY = `${clientEnv.NEXT_PUBLIC_APP_NAME}-sidebar-collapsed`;
 
 export function DashboardSidebar({
   displayName,
@@ -82,7 +83,7 @@ export function DashboardSidebar({
                 <Building2 className="size-4" aria-hidden="true" />
               </span>
 
-              <span>Propora</span>
+              <span>{clientEnv.NEXT_PUBLIC_APP_NAME}</span>
             </Link>
 
             <Button

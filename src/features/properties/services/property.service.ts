@@ -10,9 +10,7 @@ import type {
   UpdatePropertyInput,
 } from "@/features/properties/schemas/property.schema";
 
-import type {
-  PropertyListFilters,
-} from "@/features/properties/repositories/property.repository.types";
+import type { PropertyListFilters } from "@/features/properties/repositories/property.repository.types";
 import { PaginationOptions } from "@/types/pagination";
 import { PropertyAvailabilityStatus } from "../types/property";
 
@@ -94,6 +92,16 @@ export const propertyService = {
     return property;
   },
 
+  async getPublicBySlug(slug: string) {
+    const property = await propertyRepository.findBySlug(slug);
+
+    if (!property || property.publicationStatus !== "published") {
+      return null;
+    }
+
+    return property;
+  },
+
   async list(
     filters: PropertyListFilters = {},
     pagination: PaginationOptions = {},
@@ -128,10 +136,7 @@ export const propertyService = {
     }
 
     if (existing.publicationStatus === "archived") {
-      throw new AppError(
-        "CONFLICT",
-        "Archived properties cannot be edited.",
-      );
+      throw new AppError("CONFLICT", "Archived properties cannot be edited.");
     }
 
     try {
@@ -215,8 +220,7 @@ export const propertyService = {
 
   async updateAvailability(
     id: string,
-    availabilityStatus:
-     PropertyAvailabilityStatus,
+    availabilityStatus: PropertyAvailabilityStatus,
   ) {
     ensureValidId(id);
 

@@ -1,3 +1,4 @@
+import { clientEnv } from "@/config/env.client";
 import { LoginForm } from "@/features/auth/components/login-form";
 
 export default function LoginPage() {
@@ -10,7 +11,7 @@ export default function LoginPage() {
           </h1>
 
           <p className="mt-2 text-sm text-muted-foreground">
-            Sign in to your Propora account
+            Sign in to your {clientEnv.NEXT_PUBLIC_APP_NAME} account
           </p>
         </div>
 

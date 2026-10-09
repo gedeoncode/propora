@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 import { ThemeProvider } from "@/components/theme/theme-provider";
+import { clientEnv } from "@/config/env.client";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,12 +18,12 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Propora | Real Estate Management",
-    template: "%s | Propora",
+    default: `${clientEnv.NEXT_PUBLIC_APP_NAME} | Real Estate Management`,
+    template: "%s | ${clientEnv.NEXT_PUBLIC_APP_NAME}",
   },
   description:
-    "Discover properties and manage real estate operations with Propora.",
-  applicationName: "Propora",
+    "Discover properties and manage real estate operations with ${clientEnv.NEXT_PUBLIC_APP_NAME}.",
+  applicationName: `${clientEnv.NEXT_PUBLIC_APP_NAME}`,
 };
 
 export default function RootLayout({
@@ -38,11 +39,11 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
-        <script
+        {/* <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem("propora-theme");var d=t==="dark"||(t!=="light"&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",d);document.documentElement.style.colorScheme=d?"dark":"light"}catch(e){}})()`,
           }}
-        />
+        /> */}
 
         <ThemeProvider>{children}</ThemeProvider>
       </body>

@@ -1,5 +1,6 @@
 "use client";
 
+import { clientEnv } from "@/config/env.client";
 import {
   createContext,
   useCallback,
@@ -21,7 +22,7 @@ type ThemeContextValue = {
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
-const STORAGE_KEY = "propora-theme";
+const STORAGE_KEY = `${clientEnv.NEXT_PUBLIC_APP_NAME}-theme`;
 
 function getSystemTheme(): "light" | "dark" {
   if (typeof window === "undefined") {

@@ -1,6 +1,7 @@
 
 "use client";
 
+import { clientEnv } from "@/config/env.client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -205,7 +206,7 @@ export default function LeadForm({ sources, agents, properties }: Props) {
         <div>
           <h2 className="font-semibold">Lead details</h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            Record how the prospect found Propora and assign responsibility.
+            Record how the prospect found {clientEnv.NEXT_PUBLIC_APP_NAME} and assign responsibility.
           </p>
         </div>
 
