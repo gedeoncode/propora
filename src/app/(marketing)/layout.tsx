@@ -23,7 +23,10 @@ const footerLinks = [
   {
     heading: "Company",
     links: [
-      { label: `Why ${clientEnv.NEXT_PUBLIC_APP_NAME}`, href: `/#why-${clientEnv.NEXT_PUBLIC_APP_NAME.toLowerCase()}` },
+      {
+        label: `Why ${clientEnv.NEXT_PUBLIC_APP_NAME}`,
+        href: `/#why-${clientEnv.NEXT_PUBLIC_APP_NAME.toLowerCase()}`,
+      },
       { label: "Sign in", href: "/login" },
     ],
   },
@@ -43,7 +46,7 @@ function Wordmark({ size = "md" }: { size?: "md" | "sm" }) {
         }`}
       >
         <Building2
-          className={isSm ? "size-4" : "size-[18px]"}
+          className={isSm ? "size-4" : "size-4.5"}
           aria-hidden="true"
         />
       </span>
@@ -60,8 +63,8 @@ function Wordmark({ size = "md" }: { size?: "md" | "sm" }) {
 
 function MarketingHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b border-border/70 bg-background/85 backdrop-blur-md supports-[backdrop-filter]:bg-background/70">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-40 border-b border-border/70 bg-background/85 backdrop-blur-md supports-backdrop-filter:bg-background/70">
+      <div className="page-container flex h-16  items-center justify-between gap-6 px-4 sm:px-6 lg:px-8">
         <Wordmark />
 
         {/* Primary nav — desktop */}
@@ -91,11 +94,13 @@ function MarketingHeader() {
             Sign in
           </Button>
 
-          <Button size="sm" className="h-9 px-4 text-sm font-semibold" render={<Link href="/discover" aria-label="Find a property" />}>
-       
-              Find a property
-              <ArrowRight className="ml-1.5 size-3.5" aria-hidden="true" />
-           
+          <Button
+            size="sm"
+            className="h-9 px-4 text-sm font-semibold"
+            render={<Link href="/discover" aria-label="Find a property" />}
+          >
+            Find a property
+            <ArrowRight className="ml-1.5 size-3.5" aria-hidden="true" />
           </Button>
         </div>
 
@@ -118,7 +123,7 @@ function MarketingHeader() {
 function MarketingFooter() {
   return (
     <footer className="border-t border-border bg-card">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-14">
+      <div className="page-container py-12  lg:py-14">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1fr)] lg:gap-8">
           {/* Brand column */}
           <div className="max-w-sm">
@@ -153,7 +158,8 @@ function MarketingFooter() {
 
         <div className="mt-12 flex flex-col gap-3 border-t border-border pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} {clientEnv.NEXT_PUBLIC_APP_NAME}. All rights reserved.
+            © {new Date().getFullYear()} {clientEnv.NEXT_PUBLIC_APP_NAME}. All
+            rights reserved.
           </p>
           <p className="text-xs text-muted-foreground">
             Built for property discovery.
@@ -170,7 +176,7 @@ export default function MarketingLayout({
   children: ReactNode;
 }>) {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col ">
       <a
         href="#main-content"
         className="sr-only z-50 rounded-md bg-background p-3 text-foreground focus:not-sr-only focus:absolute focus:left-4 focus:top-4"

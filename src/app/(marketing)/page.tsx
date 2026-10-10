@@ -45,13 +45,8 @@ const benefits = [
 
 export default function HomePage() {
   return (
-    <main id="main-content">
-      {/* ============================================================
-          HERO
-          Single asymmetric composition: editorial copy on the left,
-          the search surface anchored into the hero on the right.
-          Brand-navy surface, no stock photography.
-          ============================================================ */}
+    <main id="main-content" className="min-h-screen bg-background">
+ 
       <section className="relative isolate overflow-hidden bg-brand-950 text-white">
         {/* Layered brand field — soft radial light + hairline grid */}
         <div
@@ -63,7 +58,7 @@ export default function HomePage() {
           className="absolute inset-0 -z-10 opacity-[0.14] [background-image:linear-gradient(to_right,rgba(255,255,255,.6)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,.6)_1px,transparent_1px)] [background-size:64px_64px] [mask-image:radial-gradient(90%_70%_at_50%_10%,black,transparent)]"
         />
 
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="page-container">
           <div className="grid gap-12 pt-16 pb-0 sm:pt-20 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-center lg:gap-16 lg:pt-24">
             {/* ---- Copy ---- */}
             <div className="max-w-xl pb-2 lg:pb-24">

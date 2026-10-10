@@ -14,6 +14,9 @@ import {
 import { PublicPropertyInquiryForm } from "@/features/leads/components/public-inquiry-property-form";
 import { PropertyDetailPageProps } from "@/features/properties/types/public-page-props";
 import { getPropertyBySlug } from "@/features/properties/services/public-property-query";
+import { PropertyGallery } from "@/features/properties/components/public-property-gallery";
+import { MobileInquiryBar } from "@/features/properties/components/public-mobile-inquiry-bar";
+import { PropertyMedia } from "@/features/properties/types/property";
 
 const propertyTypeLabels: Record<string, string> = {
   apartment: "Apartment",
@@ -54,8 +57,9 @@ function formatArea(area: number, unit: string | undefined): string {
     acre: "acres",
     hectare: "hectares",
   };
-
-  return `${area.toLocaleString("en-KE")} ${units[unit ?? ""] ?? unit ?? ""}`.trim();
+  return `${area.toLocaleString("en-KE")} ${
+    units[unit ?? ""] ?? unit ?? ""
+  }`.trim();
 }
 
 function formatListingType(listingType: "sale" | "rent"): string {
@@ -66,14 +70,19 @@ export default async function PropertyDetailPage({
   params,
 }: PropertyDetailPageProps) {
   const { slug } = await params;
-
   const property = await getPropertyBySlug(slug);
 
   if (!property) {
     notFound();
   }
 
-  const images = [...(property.media ?? [])].sort((a, b) => a.order - b.order);
+  const images = (property.media ?? [])
+    .map(({ url, alt, order }: PropertyMedia) => ({
+      url,
+      alt: alt ?? property.title,
+      order,
+    }))
+    .sort((a: { order: number }, b: { order: number }) => a.order - b.order);
 
   const locationParts = [
     property.location.city,
@@ -85,6 +94,9 @@ export default async function PropertyDetailPage({
   const addressLine = property.location.address;
 
   const isAvailable = property.availabilityStatus === "available";
+  const isAcceptingInquiries = ["available", "under_offer"].includes(
+    property.availabilityStatus,
+  );
 
   const specs = [
     property.specifications?.bedrooms !== undefined && {
@@ -106,7 +118,7 @@ export default async function PropertyDetailPage({
         property.specifications.area,
         property.specifications.areaUnit,
       ),
-      label: "Property size",
+      label: "Area",
     },
   ].filter(Boolean) as {
     key: string;
@@ -115,172 +127,126 @@ export default async function PropertyDetailPage({
     label: string;
   }[];
 
-  return (
-    <main className="min-h-screen bg-background">
-      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
-        {/* Back link */}
-        <Link
-          href="/discover"
-          className="group inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-        >
-          <ArrowLeft
-            className="size-4 transition-transform group-hover:-translate-x-0.5"
-            aria-hidden="true"
-          />
-          Back to properties
-        </Link>
+  const typeLabel =
+    propertyTypeLabels[property.propertyType] ?? propertyTypeLabels.other;
+  const availabilityLabel =
+    availabilityLabels[property.availabilityStatus] ??
+    property.availabilityStatus;
 
-        {/* Header: title, chips, location, price */}
-        <header className="mt-6 border-b border-border pb-6">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-primary">
-              {formatListingType(property.listingType)}
-            </span>
-            <span className="rounded-full bg-muted px-2.5 py-1 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-              {propertyTypeLabels[property.propertyType] ??
-                propertyTypeLabels.other}
-            </span>
-            <span
-              className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider ${
-                isAvailable
-                  ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
-                  : "bg-muted text-muted-foreground"
-              }`}
-            >
+  return (
+    <main className="min-h-screen bg-background pb-24 lg:pb-16">
+      <div className="page-container pt-5  sm:pt-6 ">
+        {/* Breadcrumb / back */}
+        <nav aria-label="Breadcrumb">
+          <Link
+            href="/discover"
+            className="group inline-flex items-center gap-1.5 text-[13px] font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <ArrowLeft
+              className="size-3.5 transition-transform group-hover:-translate-x-0.5"
+              aria-hidden="true"
+            />
+            All properties
+          </Link>
+        </nav>
+
+        {/* ── Title block: title left, price right ─────────────── */}
+        <header className="mt-4 grid gap-4 border-b border-border pb-6 sm:mt-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-10 lg:pb-7">
+          <div className="min-w-0">
+            <h1 className="text-[1.5rem] font-semibold leading-[1.2] tracking-[-0.02em] text-foreground sm:text-[1.75rem] lg:text-[2rem]">
+              {property.title}
+            </h1>
+            <p className="mt-2 flex items-start gap-1.5 text-[13.5px] leading-6 text-muted-foreground">
+              <MapPin className="mt-1 size-3.5 shrink-0" aria-hidden="true" />
+              <span className="min-w-0">
+                {addressLine && (
+                  <span className="text-foreground/75">{addressLine}</span>
+                )}
+                {addressLine && locationLabel && (
+                  <span className="text-border"> · </span>
+                )}
+                {locationLabel}
+              </span>
+            </p>
+
+            {/* Compact meta row under title */}
+            <div className="mt-3 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[12.5px] text-muted-foreground">
+              <span className="font-medium text-foreground">{typeLabel}</span>
+              <span aria-hidden="true" className="text-border">
+                ·
+              </span>
+              <span>{formatListingType(property.listingType)}</span>
+              <span aria-hidden="true" className="text-border">
+                ·
+              </span>
               <span
-                className={`size-1.5 rounded-full ${
-                  isAvailable ? "bg-emerald-500" : "bg-muted-foreground/60"
-                }`}
-                aria-hidden="true"
-              />
-              {availabilityLabels[property.availabilityStatus] ??
-                property.availabilityStatus}
-            </span>
+                className={
+                  isAvailable
+                    ? "inline-flex items-center gap-1.5 font-medium text-[color:var(--success)]"
+                    : "inline-flex items-center gap-1.5"
+                }
+              >
+                <span
+                  className={
+                    isAvailable
+                      ? "size-1.5 rounded-full bg-[color:var(--success)]"
+                      : "size-1.5 rounded-full bg-muted-foreground/50"
+                  }
+                  aria-hidden="true"
+                />
+                {availabilityLabel}
+              </span>
+            </div>
           </div>
 
-          <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-10">
-            <div className="min-w-0 max-w-3xl">
-              <h1 className="text-2xl font-semibold leading-tight tracking-tight text-foreground sm:text-3xl lg:text-[2.25rem]">
-                {property.title}
-              </h1>
-
-              <p className="mt-3 flex items-start gap-2 text-sm leading-6 text-muted-foreground">
-                <MapPin className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                <span>
-                  {addressLine && (
-                    <span className="text-foreground/80">{addressLine}</span>
-                  )}
-                  {addressLine && locationLabel && (
-                    <span className="text-muted-foreground/60"> · </span>
-                  )}
-                  {locationLabel}
-                </span>
-              </p>
-            </div>
-
-            <div className="shrink-0 lg:text-right">
-              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                {property.listingType === "sale"
-                  ? "Asking price"
-                  : "Rental price"}
-              </p>
-              <p className="mt-1 text-3xl font-semibold tracking-tight text-foreground sm:text-[2rem]">
-                {formatPrice(property.price, property.currency)}
-              </p>
-              {property.listingType === "rent" && (
-                <p className="mt-1 text-xs text-muted-foreground">
-                  Rental frequency not specified
-                </p>
-              )}
-            </div>
+          {/* Price — anchored, not floating */}
+          <div className="flex items-baseline gap-2 lg:flex-col lg:items-end lg:gap-0.5">
+            <span className="text-[10.5px] font-medium uppercase tracking-[0.1em] text-muted-foreground lg:order-2">
+              {property.listingType === "sale"
+                ? "Asking price"
+                : "Rent / month"}
+            </span>
+            <span className="text-[1.625rem] font-semibold leading-none tracking-[-0.02em] text-foreground sm:text-[1.875rem] lg:order-1">
+              {formatPrice(property.price, property.currency)}
+            </span>
           </div>
         </header>
 
-        {/* Body grid */}
-        <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start lg:gap-12">
+        {/* ── Gallery (client for lightbox + mobile paging) ────── */}
+        <div className="mt-6 sm:mt-7">
+          <PropertyGallery images={images} title={property.title} />
+        </div>
+
+        {/* ── Body: content + sidebar ──────────────────────────── */}
+        <div className="mt-8 grid gap-10 lg:mt-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start lg:gap-14">
           {/* Main column */}
           <div className="min-w-0">
-            {/* Gallery */}
-            <div className="overflow-hidden rounded-xl border border-border bg-muted">
-              {images.length > 0 ? (
-                <div className="grid gap-px sm:grid-cols-[minmax(0,1fr)_180px]">
-                  <div className="relative aspect-[4/3] min-h-64 overflow-hidden sm:aspect-auto sm:min-h-[420px]">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={images[0].url}
-                      alt={images[0].alt}
-                      fetchPriority="high"
-                      className="size-full object-cover"
-                    />
-                  </div>
-
-                  {images.length > 1 && (
-                    <div className="hidden gap-px sm:grid sm:grid-rows-2">
-                      {images.slice(1, 3).map((image) => (
-                        <div
-                          key={`${image.url}-${image.order}`}
-                          className="relative min-h-0 overflow-hidden"
-                        >
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={image.url}
-                            alt={image.alt}
-                            loading="lazy"
-                            className="size-full object-cover"
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="flex aspect-[4/3] items-center justify-center text-sm text-muted-foreground">
-                  No property images available
-                </div>
-              )}
-            </div>
-
-            {images.length > 1 && (
-              <div className="mt-2 grid grid-cols-4 gap-2 sm:hidden">
-                {images.slice(1, 5).map((image) => (
-                  <div
-                    key={`${image.url}-${image.order}`}
-                    className="aspect-square overflow-hidden rounded-md border border-border bg-muted"
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={image.url}
-                      alt={image.alt}
-                      loading="lazy"
-                      className="size-full object-cover"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Specifications */}
+            {/* Specs — inline data strip, adapts per breakpoint */}
             {specs.length > 0 && (
-              <section className="mt-8">
-                <h2 className="sr-only">Property specifications</h2>
-                <dl className="grid grid-cols-3 divide-x divide-border rounded-xl border border-border bg-card">
+              <section
+                aria-label="Property specifications"
+                className="border-y border-border"
+              >
+                <dl className="grid grid-cols-3 divide-x divide-border">
                   {specs.map((spec) => {
                     const Icon = spec.icon;
                     return (
                       <div
                         key={spec.key}
-                        className="flex flex-col items-start gap-2 px-4 py-4 sm:px-5 sm:py-5"
+                        className="flex flex-col gap-1 py-4 px-1 first:pl-0 last:pr-0 sm:flex-row sm:items-center sm:gap-3 sm:px-5 sm:py-5"
                       >
                         <Icon
-                          className="size-4 text-muted-foreground"
+                          className="size-4 shrink-0 text-muted-foreground"
                           aria-hidden="true"
                         />
-                        <dd className="text-base font-semibold tracking-tight text-foreground sm:text-lg">
-                          {spec.value}
-                        </dd>
-                        <dt className="text-xs text-muted-foreground">
-                          {spec.label}
-                        </dt>
+                        <div className="min-w-0">
+                          <dd className="truncate text-[15px] font-semibold tracking-[-0.01em] text-foreground">
+                            {spec.value}
+                          </dd>
+                          <dt className="text-[10.5px] uppercase tracking-[0.08em] text-muted-foreground">
+                            {spec.label}
+                          </dt>
+                        </div>
                       </div>
                     );
                   })}
@@ -288,31 +254,35 @@ export default async function PropertyDetailPage({
               </section>
             )}
 
-            {/* About */}
-            <section className="mt-10 border-t border-border pt-8">
-              <h2 className="text-lg font-semibold tracking-tight sm:text-xl">
+            {/* About — editorial, no card */}
+            <section className="mt-9 sm:mt-10">
+              <h2 className="text-[13px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
                 About this property
               </h2>
-              <p className="mt-4 whitespace-pre-line text-sm leading-7 text-muted-foreground sm:text-[0.9375rem]">
+              <p className="mt-3 whitespace-pre-line text-[15px] leading-7 text-foreground/85">
                 {property.description}
               </p>
             </section>
 
-            {/* Amenities */}
+            {/* Amenities — two-column, no border-top noise */}
             {property.amenities.length > 0 && (
-              <section className="mt-10 border-t border-border pt-8">
-                <h2 className="text-lg font-semibold tracking-tight sm:text-xl">
-                  Features and amenities
-                </h2>
-
-                <ul className="mt-5 grid gap-x-8 gap-y-3 sm:grid-cols-2">
+              <section className="mt-9 sm:mt-10">
+                <div className="flex items-baseline justify-between gap-4">
+                  <h2 className="text-[13px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
+                    Features &amp; amenities
+                  </h2>
+                  <span className="text-xs tabular-nums text-muted-foreground">
+                    {property.amenities.length}
+                  </span>
+                </div>
+                <ul className="mt-3.5 grid gap-x-8 gap-y-2 sm:grid-cols-2">
                   {property.amenities.map((amenity) => (
                     <li
                       key={amenity}
-                      className="flex items-start gap-2.5 text-sm text-foreground/80"
+                      className="flex items-start gap-2.5 text-[14px] leading-6 text-foreground/85"
                     >
                       <CheckCircle2
-                        className="mt-0.5 size-4 shrink-0 text-primary"
+                        className="mt-[5px] size-3.5 shrink-0 text-[color:var(--success)]"
                         aria-hidden="true"
                       />
                       <span>{amenity}</span>
@@ -323,75 +293,96 @@ export default async function PropertyDetailPage({
             )}
           </div>
 
-          {/* Sidebar */}
+          {/* Sidebar — visible at all breakpoints; sticky from lg up */}
           <aside className="lg:sticky lg:top-6">
-            <div className="overflow-hidden rounded-xl border border-border bg-card">
-              {/* Property summary */}
-              <dl className="divide-y divide-border text-sm">
-                <div className="flex items-start justify-between gap-4 px-5 py-3.5">
+            <div id="inquiry-anchor" className="space-y-6">
+              {/* Facts: hairline-bounded definition list, no box */}
+              <dl className="divide-y divide-border border-y border-border text-[13px]">
+                <div className="flex items-center justify-between gap-4 py-2.5">
                   <dt className="text-muted-foreground">Property type</dt>
                   <dd className="text-right font-medium text-foreground">
-                    {propertyTypeLabels[property.propertyType] ??
-                      propertyTypeLabels.other}
+                    {typeLabel}
                   </dd>
                 </div>
-
-                <div className="flex items-start justify-between gap-4 px-5 py-3.5">
+                <div className="flex items-center justify-between gap-4 py-2.5">
                   <dt className="text-muted-foreground">Listing</dt>
                   <dd className="text-right font-medium text-foreground">
                     {formatListingType(property.listingType)}
                   </dd>
                 </div>
-
-                <div className="flex items-start justify-between gap-4 px-5 py-3.5">
+                <div className="flex items-center justify-between gap-4 py-2.5">
                   <dt className="text-muted-foreground">Availability</dt>
-                  <dd className="text-right font-medium text-foreground">
-                    {availabilityLabels[property.availabilityStatus] ??
-                      property.availabilityStatus}
+                  <dd
+                    className={
+                      isAvailable
+                        ? "text-right font-medium text-[color:var(--success)]"
+                        : "text-right font-medium text-foreground"
+                    }
+                  >
+                    {availabilityLabel}
                   </dd>
                 </div>
               </dl>
 
-              {/* Inquiry */}
-              <div className="border-t border-border bg-muted/40 px-5 py-5">
-                <h2 className="text-base font-semibold tracking-tight text-foreground">
-                  Interested in this property?
+              {/* Inquiry — heading + description, then the form's own mt-5 takes over */}
+              <section
+                aria-labelledby="inquiry-heading"
+                className="border-t border-border pt-5"
+              >
+                <h2
+                  id="inquiry-heading"
+                  className="text-[15px] font-semibold tracking-[-0.01em] text-foreground"
+                >
+                  {isAcceptingInquiries
+                    ? "Request more information"
+                    : "Listing unavailable"}
                 </h2>
-                <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                  Send an inquiry to the agency to learn more or discuss
-                  arranging a viewing.
+                <p className="mt-1 text-[13px] leading-6 text-muted-foreground">
+                  {isAcceptingInquiries
+                    ? "Message the agency to ask a question or arrange a viewing."
+                    : "This property is no longer accepting inquiries."}
                 </p>
 
-                <div className="mt-4">
-                  {["available", "under_offer"].includes(
-                    property.availabilityStatus,
-                  ) ? (
-                    <PublicPropertyInquiryForm slug={property.slug} />
-                  ) : (
-                    <p className="rounded-lg border border-border bg-background px-3 py-3 text-sm text-muted-foreground">
-                      This property is no longer accepting inquiries.
-                    </p>
-                  )}
-                </div>
-              </div>
+                {isAcceptingInquiries ? (
+                  <PublicPropertyInquiryForm slug={property.slug} />
+                ) : (
+                  <div className="mt-4 rounded-md border border-border bg-muted/50 px-3.5 py-3 text-[13px] text-muted-foreground">
+                    Try{" "}
+                    <Link
+                      href="/discover"
+                      className="font-medium text-foreground underline underline-offset-2 hover:text-primary"
+                    >
+                      browsing similar properties
+                    </Link>{" "}
+                    instead.
+                  </div>
+                )}
+              </section>
 
-              {/* Cross-link */}
-              <div className="border-t border-border px-5 py-4">
-                <Link
-                  href="/discover"
-                  className="group inline-flex w-full items-center justify-between gap-2 text-sm font-medium text-foreground transition-colors hover:text-primary"
-                >
-                  Explore more properties
-                  <ArrowUpRight
-                    className="size-4 text-muted-foreground transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary"
-                    aria-hidden="true"
-                  />
-                </Link>
-              </div>
+              {/* Cross-link — quiet, inline */}
+              <Link
+                href="/discover"
+                className="group inline-flex items-center gap-1.5 text-[13px] font-medium text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Explore more properties
+                <ArrowUpRight
+                  className="size-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
+              </Link>
             </div>
           </aside>
         </div>
       </div>
+
+      {/* Mobile/tablet sticky inquiry CTA — client for scroll reveal */}
+      {isAcceptingInquiries && (
+        <MobileInquiryBar
+          slug={property.slug}
+          price={formatPrice(property.price, property.currency)}
+          listingType={property.listingType}
+        />
+      )}
     </main>
   );
 }

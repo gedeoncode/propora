@@ -1,0 +1,18 @@
+@layer components {
+  .page-container {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 72rem;
+    padding-inline: 1rem;
+
+
+    @media (width >= 40rem) {
+      padding-inline: 1.5rem;
+      
+    }
+
+    @media (width >= 64rem) {
+      padding-inline: 2rem;
+    }
+  }
+}

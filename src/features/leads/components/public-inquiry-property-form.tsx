@@ -71,7 +71,7 @@ export function PublicPropertyInquiryForm({
         className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4"
       >
         <CheckCircle2
-          className="size-5 text-emerald-600"
+          className="size-5 text-success"
           aria-hidden="true"
         />
         <p className="mt-2 font-semibold">Inquiry received</p>

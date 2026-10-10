@@ -108,10 +108,7 @@ function humanizeStatus(status: string): string {
 }
 
 /** Compute the set of pagination page numbers to render (with -1 as ellipsis). */
-function getPageNumbers(
-  current: number,
-  total: number,
-): (number | -1)[] {
+function getPageNumbers(current: number, total: number): (number | -1)[] {
   if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
 
   const pages: (number | -1)[] = [1];
@@ -127,8 +124,7 @@ function getPageNumbers(
 
 export const metadata = {
   title: `Discover Properties | ${clientEnv.NEXT_PUBLIC_APP_NAME}`,
-  description:
-    `Explore properties for sale and rent with ${clientEnv.NEXT_PUBLIC_APP_NAME}. Find a home, land, or commercial space that fits your needs.`,
+  description: `Explore properties for sale and rent with ${clientEnv.NEXT_PUBLIC_APP_NAME}. Find a home, land, or commercial space that fits your needs.`,
 };
 
 export default async function DiscoverPage({
@@ -205,19 +201,28 @@ export default async function DiscoverPage({
   if (filters.listingType) {
     activeFilters.push({
       label: listingTypeLabels[filters.listingType],
-      removeHref: buildHref(queryParams, { listingType: undefined, page: undefined }),
+      removeHref: buildHref(queryParams, {
+        listingType: undefined,
+        page: undefined,
+      }),
     });
   }
   if (filters.propertyType) {
     activeFilters.push({
       label: propertyTypeLabels[filters.propertyType],
-      removeHref: buildHref(queryParams, { propertyType: undefined, page: undefined }),
+      removeHref: buildHref(queryParams, {
+        propertyType: undefined,
+        page: undefined,
+      }),
     });
   }
   if (filters.availabilityStatus) {
     activeFilters.push({
       label: humanizeStatus(filters.availabilityStatus),
-      removeHref: buildHref(queryParams, { availabilityStatus: undefined, page: undefined }),
+      removeHref: buildHref(queryParams, {
+        availabilityStatus: undefined,
+        page: undefined,
+      }),
     });
   }
   if (filters.city) {
@@ -229,13 +234,19 @@ export default async function DiscoverPage({
   if (filters.minPrice !== undefined) {
     activeFilters.push({
       label: `From ${formatPrice(filters.minPrice, "KES")}`,
-      removeHref: buildHref(queryParams, { minPrice: undefined, page: undefined }),
+      removeHref: buildHref(queryParams, {
+        minPrice: undefined,
+        page: undefined,
+      }),
     });
   }
   if (filters.maxPrice !== undefined) {
     activeFilters.push({
       label: `Up to ${formatPrice(filters.maxPrice, "KES")}`,
-      removeHref: buildHref(queryParams, { maxPrice: undefined, page: undefined }),
+      removeHref: buildHref(queryParams, {
+        maxPrice: undefined,
+        page: undefined,
+      }),
     });
   }
 
@@ -249,71 +260,57 @@ export default async function DiscoverPage({
   return (
     <div className="min-h-screen bg-background">
       {/* Compact contextual header — not a full marketing hero */}
-      <header className="border-b border-border bg-card">
-        <div className="mx-auto max-w-7xl px-4 py-5 sm:px-6 sm:py-6 lg:px-8">
+      <header className="relative isolate overflow-hidden border-b border-background bg-brand-950 text-background">
+        {/* Grid background */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 overflow-hidden"
+        >
+          <svg
+            viewBox="0 0 700 900"
+            fill="none"
+            className="absolute inset-0 size-full"
+            preserveAspectRatio="xMidYMid slice"
+          >
+            <g stroke="white" strokeOpacity="0.12" strokeWidth="1">
+              {/* Horizontal grid lines */}
+              {Array.from({ length: 40 }, (_, i) => (
+                <path key={`h-${i}`} d={`M0 ${150 + i * 20}H700`} />
+              ))}
+
+              {/* Vertical grid lines */}
+              {Array.from({ length: 40 }, (_, i) => (
+                <path key={`v-${i}`} d={`M${i * 25} 0V900`} />
+              ))}
+            </g>
+          </svg>
+
+          <div className="absolute inset-0 bg-brand-950/25" />
+
+          <div className="absolute bottom-0 left-0 right-0 h-px bg-white/10" />
+        </div>
+
+        {/* Header content */}
+        <div className="page-container relative py-5 sm:py-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div className="min-w-0">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-primary">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-blue-300">
                 Discover
               </p>
-              <h1 className="mt-1 text-2xl font-semibold tracking-tight text-foreground sm:text-[1.75rem]">
+
+              <h1 className="mt-1 text-2xl font-semibold tracking-tight text-white sm:text-[1.75rem]">
                 Properties
               </h1>
-              <p className="mt-1.5 text-sm text-muted-foreground">
+
+              <p className="mt-1.5 text-sm text-white/65">
                 Homes, land, and commercial spaces for sale and rent.
               </p>
             </div>
-
-            {/* Inline quick-search — city is the highest-signal filter */}
-            <form
-              action="/discover"
-              method="get"
-              className="flex w-full max-w-md items-stretch gap-2 lg:w-auto lg:shrink-0"
-            >
-              {/* Preserve other active filters when quick-searching */}
-              {filters.listingType && (
-                <input type="hidden" name="listingType" value={filters.listingType} />
-              )}
-              {filters.propertyType && (
-                <input type="hidden" name="propertyType" value={filters.propertyType} />
-              )}
-              {filters.availabilityStatus && (
-                <input type="hidden" name="availabilityStatus" value={filters.availabilityStatus} />
-              )}
-              {filters.minPrice !== undefined && (
-                <input type="hidden" name="minPrice" value={String(filters.minPrice)} />
-              )}
-              {filters.maxPrice !== undefined && (
-                <input type="hidden" name="maxPrice" value={String(filters.maxPrice)} />
-              )}
-
-              <div className="relative flex-1">
-                <MapPin
-                  className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
-                  aria-hidden="true"
-                />
-                <input
-                  name="city"
-                  defaultValue={filters.city}
-                  placeholder="Search by city"
-                  maxLength={120}
-                  aria-label="Search by city"
-                  className="h-10 w-full rounded-lg border border-input bg-background pl-9 pr-3 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40"
-                />
-              </div>
-              <button
-                type="submit"
-                className="inline-flex h-10 shrink-0 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
-              >
-                <Search className="size-4" aria-hidden="true" />
-                <span className="hidden sm:inline">Search</span>
-              </button>
-            </form>
           </div>
         </div>
       </header>
 
-      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+      <div className="page-container py-6 lg:py-8">
         <div className="grid gap-8 lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-10">
           {/* Desktop filter rail */}
           <aside className="hidden lg:block">
@@ -387,7 +384,9 @@ export default async function DiscoverPage({
                       className="size-3.5 text-muted-foreground transition-colors group-hover:text-foreground"
                       aria-hidden="true"
                     />
-                    <span className="sr-only">Remove {filter.label} filter</span>
+                    <span className="sr-only">
+                      Remove {filter.label} filter
+                    </span>
                   </Link>
                 ))}
                 <Link
@@ -452,7 +451,11 @@ type FilterFormProps = {
   variant?: "rail" | "mobile";
 };
 
-function FilterForm({ filters, hasFilters, variant = "rail" }: FilterFormProps) {
+function FilterForm({
+  filters,
+  hasFilters,
+  variant = "rail",
+}: FilterFormProps) {
   const isMobile = variant === "mobile";
 
   return (
@@ -460,15 +463,16 @@ function FilterForm({ filters, hasFilters, variant = "rail" }: FilterFormProps) 
       action="/discover"
       method="get"
       className={
-        isMobile
-          ? "space-y-5"
-          : "rounded-xl border border-border bg-card p-5"
+        isMobile ? "space-y-5" : "rounded-xl border border-border bg-card p-5"
       }
     >
       {!isMobile && (
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <SlidersHorizontal className="size-4 text-primary" aria-hidden="true" />
+            <SlidersHorizontal
+              className="size-4 text-primary"
+              aria-hidden="true"
+            />
             <h2 className="text-sm font-semibold text-foreground">Filters</h2>
           </div>
           {hasFilters && (
@@ -531,11 +535,7 @@ function FilterForm({ filters, hasFilters, variant = "rail" }: FilterFormProps) 
           </select>
         </Field>
 
-        <Field
-          label="Price range"
-          hint="In KES"
-          htmlFor="minPrice"
-        >
+        <Field label="Price range" hint="In KES" htmlFor="minPrice">
           <div className="grid grid-cols-2 gap-3">
             <input
               id="minPrice"
@@ -579,7 +579,13 @@ function FilterForm({ filters, hasFilters, variant = "rail" }: FilterFormProps) 
           </div>
         </Field>
 
-        <div className={isMobile ? "sticky bottom-0 -mx-5 mt-6 border-t border-border bg-card px-5 pt-4" : ""}>
+        <div
+          className={
+            isMobile
+              ? "sticky bottom-0 -mx-5 mt-6 border-t border-border bg-card px-5 pt-4"
+              : ""
+          }
+        >
           <button
             type="submit"
             className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
@@ -626,9 +632,7 @@ type PropertyCardProps = {
   property: Awaited<
     ReturnType<typeof propertyService.listPublic>
   >["items"][number];
-  image:
-    | { url: string; alt: string; order: number }
-    | undefined;
+  image: { url: string; alt: string; order: number } | undefined;
   featured?: boolean;
 };
 
@@ -702,7 +706,9 @@ function PropertyCard({ property, image, featured }: PropertyCardProps) {
 
           <p className="mt-2 flex items-center gap-1.5 text-sm text-muted-foreground">
             <MapPin className="size-3.5 shrink-0" aria-hidden="true" />
-            <span className="truncate">{locationText || "Location not specified"}</span>
+            <span className="truncate">
+              {locationText || "Location not specified"}
+            </span>
           </p>
 
           <div className="mt-4 flex items-baseline justify-between gap-3 border-t border-border pt-3.5">
