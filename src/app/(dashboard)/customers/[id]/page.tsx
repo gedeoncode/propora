@@ -5,8 +5,6 @@ import { PageHeader } from "@/components/layout/page-header";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { customerService } from "@/features/customers/services/customer.service";
 import { requireRole } from "@/lib/auth/guards";
-import { connectToDatabase } from "@/lib/db/mongoose";
-
 type CustomerDetailsPageProps = {
   params: Promise<{ id: string }>;
 };
@@ -32,7 +30,7 @@ export default async function CustomerDetailsPage({
   params,
 }: CustomerDetailsPageProps) {
   await requireRole(["admin", "manager", "staff"]);
-  await connectToDatabase();
+
 
   const { id } = await params;
 

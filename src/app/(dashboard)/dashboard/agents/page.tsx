@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 import { requireRole } from "@/lib/auth/guards";
-import { connectToDatabase } from "@/lib/db/mongoose";
 import { agentService } from "@/features/agents/services/agent.service";
 import {
   AGENT_SPECIALIZATIONS,
@@ -42,8 +41,6 @@ export default async function AgentsPage({
   searchParams: Promise<SearchParams>;
 }) {
   await requireRole(["admin", "manager", "staff"]);
-
-  await connectToDatabase();
 
   const params = await searchParams;
 

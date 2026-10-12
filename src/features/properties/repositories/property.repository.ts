@@ -8,21 +8,23 @@ import type {
 } from "@/features/properties/schemas/property.schema";
 import type { PropertyListFilters, PropertyQuery } from "./property.repository.types";
 import type { PaginationOptions } from "@/types/pagination";
+import { withDatabase } from "@/lib/db/with-db";
 
 
 export const propertyRepository = {
   async findById(id: string) {
-    return Property.findById(id).exec();
+    return withDatabase(() => Property.findById(id).exec());
   },
 
   async findBySlug(slug: string) {
-    return Property.findOne({ slug }).exec();
+    return withDatabase(() => Property.findOne({ slug }).exec());
   },
 
   async list(
     filters: PropertyListFilters = {},
     pagination: PaginationOptions = {},
   ) {
+    return withDatabase(async () => {
     const page = Math.max(1, pagination.page ?? 1);
     const limit = Math.min(100, Math.max(1, pagination.limit ?? 20));
     const skip = (page - 1) * limit;
@@ -82,31 +84,33 @@ export const propertyRepository = {
         totalPages: Math.ceil(total / limit),
       },
     };
+  });
   },
 
   async create(input: CreatePropertyInput & { slug: string; createdBy: string }) {
-    return Property.create({
+    return withDatabase(() => Property.create({
       ...input,
       publicationStatus: "draft",
-    });
+    }));
   },
 
   async updateById(id: string, input: UpdatePropertyInput) {
-
-    return Property.findByIdAndUpdate(id, input, {
-      new: true,
-      runValidators: true,
-    }).exec();
+    return withDatabase(() => 
+      Property.findByIdAndUpdate(id, input, {
+        new: true,
+        runValidators: true,
+    }).exec())
   },
 
   async archiveById(id: string) {
-    return Property.findByIdAndUpdate(
-      id,
+    return withDatabase(() =>
+      Property.findByIdAndUpdate(
+        id,
       { publicationStatus: "archived" },
       {
         new: true,
         runValidators: true,
       },
-    ).exec();
+    ).exec())
   },
 };

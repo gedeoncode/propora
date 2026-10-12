@@ -19,7 +19,6 @@ import { leadService } from "@/features/leads/services/lead.service";
 import type { ViewingStatus } from "@/features/viewings/types/viewing";
 
 import { requireRole } from "@/lib/auth/guards";
-import { connectToDatabase } from "@/lib/db/mongoose";
 
 import { ViewingStatusActions } from "@/features/viewings/components/viewing-status-actions";
 
@@ -88,7 +87,6 @@ export default async function ViewingDetailPage({
   params,
 }: ViewingDetailPageProps) {
   await requireRole(["admin", "manager", "agent", "staff"]);
-  await connectToDatabase();
 
   const { id } = await params;
 

@@ -1,6 +1,7 @@
 
 "use client";
 
+import { Input } from "@/components/ui/input";
 import { clientEnv } from "@/config/env.client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -18,7 +19,7 @@ type Props = {
 };
 
 const inputClassName =
-  "mt-1 block w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm outline-none transition focus:border-ring focus:ring-2 focus:ring-ring/20";
+  "mt-1  w-full ";
 
 const labelClassName = "text-sm font-medium";
 
@@ -138,7 +139,7 @@ export default function LeadForm({ sources, agents, properties }: Props) {
             <label htmlFor="firstName" className={labelClassName}>
               First name <span className="text-destructive">*</span>
             </label>
-            <input
+            <Input
               id="firstName"
               required
               maxLength={100}
@@ -154,7 +155,7 @@ export default function LeadForm({ sources, agents, properties }: Props) {
             <label htmlFor="lastName" className={labelClassName}>
               Last name <span className="text-destructive">*</span>
             </label>
-            <input
+            <Input
               id="lastName"
               required
               maxLength={100}
@@ -170,7 +171,7 @@ export default function LeadForm({ sources, agents, properties }: Props) {
             <label htmlFor="email" className={labelClassName}>
               Email address
             </label>
-            <input
+            <Input
               id="email"
               type="email"
               maxLength={254}
@@ -186,7 +187,7 @@ export default function LeadForm({ sources, agents, properties }: Props) {
             <label htmlFor="phone" className={labelClassName}>
               Phone number
             </label>
-            <input
+            <Input
               id="phone"
               type="tel"
               maxLength={30}
@@ -272,7 +273,7 @@ export default function LeadForm({ sources, agents, properties }: Props) {
                 key={property.id}
                 className="flex cursor-pointer items-start gap-3 rounded-md p-2 transition-colors hover:bg-muted/50"
               >
-                <input
+                <Input
                   type="checkbox"
                   checked={interestedPropertyIds.includes(property.id)}
                   onChange={() => toggleProperty(property.id)}

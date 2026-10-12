@@ -5,7 +5,6 @@ import { agentService } from "@/features/agents/services/agent.service";
 import { customerService } from "@/features/customers/services/customer.service";
 import { leadService } from "@/features/leads/services/lead.service";
 import { propertyService } from "@/features/properties/services/property.service";
-import { connectToDatabase } from "@/lib/db/mongoose";
 import { requireRole } from "@/lib/auth/guards";
 
 import { ViewingForm } from "@/features/viewings/components/viewing-form";
@@ -13,7 +12,6 @@ import { PageHeader } from "@/components/layout/page-header";
 
 export default async function NewViewingPage() {
   await requireRole(["admin", "manager", "agent", "staff"]);
-  await connectToDatabase();
 
   const [propertyResult, agents, customers, leads] = await Promise.all([
     propertyService.list({}, { page: 1, limit: 100 }),
@@ -60,7 +58,7 @@ export default async function NewViewingPage() {
     }));
 
   return (
-    <main className="mx-auto max-w-5xl space-y-6">
+    <main className=" space-y-6">
       <div className="space-y-3">
         <Link
           href="/viewings"

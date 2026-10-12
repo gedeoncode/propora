@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 
 import { updateViewingSchema } from "@/features/viewings/schemas/viewing.schema";
 import { viewingService } from "@/features/viewings/services/viewing.service";
-import { connectToDatabase } from "@/lib/db/mongoose";
 import { requireRole } from "@/lib/auth/guards";
 import { apiErrorResponse } from "@/lib/errors/api-error";
 
@@ -19,7 +18,6 @@ export async function GET(
 ) {
   try {
     await requireRole([...ALLOWED_ROLES]);
-    await connectToDatabase();
 
     const { id } = await context.params;
     const viewing = await viewingService.getById(id);

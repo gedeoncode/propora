@@ -15,7 +15,6 @@ import {
   PROPERTY_TYPES,
   PROPERTY_AVAILABILITY_STATUSES,
 } from "@/features/properties/types/property";
-import { connectToDatabase } from "@/lib/db/mongoose";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
@@ -161,7 +160,6 @@ export default async function DiscoverPage({
     null;
 
   try {
-    await connectToDatabase();
     result = await propertyService.listPublic(filters, {
       page: validPage,
       limit: PAGE_SIZE,

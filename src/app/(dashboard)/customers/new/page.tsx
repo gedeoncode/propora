@@ -8,6 +8,9 @@ import {
   CUSTOMER_STATUSES,
   CUSTOMER_TYPES,
 } from "@/features/customers/types/customer";
+import { ArrowLeft, User } from "lucide-react";
+import { PageHeader } from "@/components/layout/page-header";
+import { Input } from "@/components/ui/input";
 
 type FormValues = {
   firstName: string;
@@ -108,28 +111,27 @@ export default function NewCustomerPage() {
   }
 
   const inputClassName =
-    "w-full rounded-md border border-border bg-background px-3 py-2.5 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20";
+    "w-full px-3 rounded-md text-sm py-2.5 bg-background ";
 
   const labelClassName = "mb-1.5 block text-sm font-medium";
 
   return (
     <main className="mx-auto max-w-5xl space-y-6">
-      <div>
+      <div className="space-y-3">
         <Link
           href="/customers"
-          className="text-sm text-muted-foreground hover:text-foreground"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
-          ← Back to customers
+          <ArrowLeft className="size-4" aria-hidden="true" />
+          Back to Customers
         </Link>
 
-        <h1 className="mt-3 text-2xl font-semibold tracking-tight">
-          Add customer
-        </h1>
-
-        <p className="mt-1 text-sm text-muted-foreground">
-          Create a CRM contact to track property interests and customer
-          relationships.
-        </p>
+        <PageHeader
+          icon={<User className="size-5" aria-hidden="true" />}
+          title="Add Customer"
+          description="  Create a CRM contact to track property interests and customer
+          relationships."
+        />
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -146,7 +148,7 @@ export default function NewCustomerPage() {
               <label htmlFor="firstName" className={labelClassName}>
                 First name <span className="text-destructive">*</span>
               </label>
-              <input
+              <Input
                 id="firstName"
                 name="firstName"
                 autoComplete="given-name"
@@ -165,7 +167,7 @@ export default function NewCustomerPage() {
               <label htmlFor="lastName" className={labelClassName}>
                 Last name <span className="text-destructive">*</span>
               </label>
-              <input
+              <Input
                 id="lastName"
                 name="lastName"
                 autoComplete="family-name"
@@ -184,7 +186,7 @@ export default function NewCustomerPage() {
               <label htmlFor="email" className={labelClassName}>
                 Email address
               </label>
-              <input
+              <Input
                 id="email"
                 name="email"
                 type="email"
@@ -201,7 +203,7 @@ export default function NewCustomerPage() {
               <label htmlFor="phone" className={labelClassName}>
                 Phone number
               </label>
-              <input
+              <Input
                 id="phone"
                 name="phone"
                 type="tel"

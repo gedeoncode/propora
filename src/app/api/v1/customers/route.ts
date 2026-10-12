@@ -9,7 +9,6 @@ import {
   CUSTOMER_TYPES,
 } from "@/features/customers/types/customer";
 import { customerService } from "@/features/customers/services/customer.service";
-import { connectToDatabase } from "@/lib/db/mongoose";
 import { requireRole } from "@/lib/auth/guards";
 import { apiErrorResponse } from "@/lib/errors/api-error";
 import { AppError } from "@/lib/errors/app-error";
@@ -32,8 +31,7 @@ function isCustomerType(
 
 export async function GET(request: NextRequest) {
   try {
-    await requireRole(["admin", "manager", "agent"]);
-    await connectToDatabase();
+    await requireRole(["admin", "manager", "agent", "staff"]);
 
     const searchParams = request.nextUrl.searchParams;
 
@@ -78,8 +76,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    await requireRole(["admin", "manager", "agent"]);
-    await connectToDatabase();
+    await requireRole(["admin", "manager", "agent", "staff"]);
 
     const body: unknown = await request.json();
     const input = createCustomerSchema.parse(body);

@@ -9,6 +9,7 @@ import type {
   LeadSource,
   LeadStatus,
 } from "@/features/leads/types/lead";
+import { withDatabase } from "@/lib/db/with-db";
 
 export type LeadListFilters = {
   status?: LeadStatus;
@@ -18,11 +19,13 @@ export type LeadListFilters = {
 };
 
 export const leadRepository = {
+
   async findById(id: string) {
-    return Lead.findById(id).exec();
+    return withDatabase(() => Lead.findById(id).exec());
   },
 
   async list(filters: LeadListFilters = {}) {
+    return withDatabase(() => {
     const query: Record<string, unknown> = {};
 
     if (filters.status) {
@@ -44,42 +47,47 @@ export const leadRepository = {
     return Lead.find(query)
       .sort({ createdAt: -1 })
       .exec();
+  })
   },
 
   async create(input: CreateLeadInput) {
-    return Lead.create(input);
+    return withDatabase(() => Lead.create(input));
   },
 
   async updateById(id: string, input: UpdateLeadInput) {
-    return Lead.findByIdAndUpdate(id, input, {
+    return withDatabase(() => 
+      Lead.findByIdAndUpdate(id, input, {
       new: true,
       runValidators: true,
-    }).exec();
+    }).exec()
+  )
   },
 
   async updateStatus(id: string, status: LeadStatus) {
-    return Lead.findByIdAndUpdate(
+    return withDatabase(() =>
+    Lead.findByIdAndUpdate(
       id,
       { status },
       {
         new: true,
-        runValidators: true,
+        runValidators: true, 
       },
-    ).exec();
+    ).exec())
   },
 
   async assignAgent(id: string, assignedAgentId: string | null) {
-    return Lead.findByIdAndUpdate(
-      id,
+    return withDatabase(() =>
+      Lead.findByIdAndUpdate(
+        id,
       { assignedAgentId },
       {
         new: true,
         runValidators: true,
       },
-    ).exec();
+    ).exec())
   },
 
   async deleteById(id: string) {
-  return Lead.findByIdAndDelete(id).exec();
+  return withDatabase(() => Lead.findByIdAndDelete(id).exec());
 },
 };

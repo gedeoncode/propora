@@ -2,7 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { requireRole } from "@/lib/auth/guards";
-import { connectToDatabase } from "@/lib/db/mongoose";
 import { agentService } from "@/features/agents/services/agent.service";
 import { logger } from "@/lib/logger";
 
@@ -41,8 +40,6 @@ export default async function AgentDetailPage({
   params,
 }: AgentDetailPageProps) {
   await requireRole(["admin", "manager", "staff"]);
-
-  await connectToDatabase();
 
   const { id } = await params;
   const agent = await agentService.getById(id);

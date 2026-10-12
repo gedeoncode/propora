@@ -7,7 +7,6 @@ import { leadService } from "@/features/leads/services/lead.service";
 import { propertyService } from "@/features/properties/services/property.service";
 import { viewingService } from "@/features/viewings/services/viewing.service";
 import { VIEWING_TYPES } from "@/features/viewings/types/viewing";
-import { connectToDatabase } from "@/lib/db/mongoose";
 import { requireRole } from "@/lib/auth/guards";
 
 import ViewingEditForm from "@/features/viewings/components/viewing-edit-form";
@@ -20,7 +19,6 @@ type PageProps = {
 
 export default async function EditViewingPage({ params }: PageProps) {
   await requireRole([...ALLOWED_ROLES]);
-  await connectToDatabase();
 
   const { id } = await params;
 

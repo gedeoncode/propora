@@ -6,7 +6,6 @@ import {
   CUSTOMER_TYPES,
 } from "@/features/customers/types/customer";
 import { requireRole } from "@/lib/auth/guards";
-import { connectToDatabase } from "@/lib/db/mongoose";
 import { PageHeader } from "@/components/layout/page-header";
 import { StatusBadge } from "@/components/ui/status-badge";
 
@@ -45,8 +44,7 @@ export default async function CustomersPage({
 }: {
   searchParams: Promise<SearchParams>;
 }) {
-  await requireRole(["admin", "manager", "staff"]);
-  await connectToDatabase();
+  await requireRole(["admin", "manager", "staff", "agent"]);
 
   const params = await searchParams;
 

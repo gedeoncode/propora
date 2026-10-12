@@ -10,7 +10,6 @@ import {
   type LeadSource,
   type LeadStatus,
 } from "@/features/leads/types/lead";
-import { connectToDatabase } from "@/lib/db/mongoose";
 import { requireRole } from "@/lib/auth/guards";
 
 import { viewingService } from "@/features/viewings/services/viewing.service";
@@ -79,7 +78,6 @@ function formatDate(value: Date | string) {
 
 export default async function LeadDetailsPage({ params }: PageProps) {
   await requireRole([...ALLOWED_ROLES]);
-  await connectToDatabase();
 
   const { id } = await params;
 

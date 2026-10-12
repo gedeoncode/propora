@@ -4,6 +4,7 @@ import Agent from "@/features/agents/models/agent.model";
 import { dashboardRepository } from "@/features/analytics/repositories/dashboard.repository";
 import { requireRole } from "@/lib/auth/guards";
 import { AppError } from "@/lib/errors/app-error";
+import { agentRepository } from "@/features/agents/repositories/agent.repository";
 
 const DEFAULT_UPCOMING_VIEWINGS_LIMIT = 5;
 
@@ -26,21 +27,16 @@ export const dashboardService = {
     let agentId: string | undefined;
 
     if (user.role === "agent") {
-      const agent = await Agent.findOne({
-        userId: user.id,
-      })
-        .select("_id")
-        .lean()
-        .exec();
+     const foundAgentId = await agentRepository.findIdByUserId(user.id);
 
-      if (!agent) {
+      if (!foundAgentId) {
         throw new AppError(
           "NOT_FOUND",
           "Agent profile was not found.",
         );
       }
 
-      agentId = agent._id.toString();
+      agentId = foundAgentId;
     }
 
     const repositoryOptions = {

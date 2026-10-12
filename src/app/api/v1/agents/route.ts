@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { apiErrorResponse } from "@/lib/errors/api-error";
 import { AppError } from "@/lib/errors/app-error";
-import { requireRole } from "@/lib/auth/guards";
+import { requireAdmin } from "@/lib/auth/guards";
 
 import { agentService } from "@/features/agents/services/agent.service";
 import { createAgentWithUserSchema } from "@/features/agents/schemas/agent.schema";
@@ -18,6 +18,8 @@ function isAgentStatus(
 
 export async function GET(request: NextRequest) {
   try {
+    await requireAdmin();
+
     const status = request.nextUrl.searchParams.get("status");
 
     if (status && !isAgentStatus(status)) {
@@ -42,10 +44,9 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    await requireRole(["admin", "manager", "staff"]);
+    await requireAdmin();
 
     const body: unknown = await request.json();
-
     const input = createAgentWithUserSchema.parse(body);
 
     const result = await agentService.createWithUser(input);

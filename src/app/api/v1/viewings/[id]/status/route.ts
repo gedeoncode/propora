@@ -4,7 +4,6 @@ import { viewingService } from "@/features/viewings/services/viewing.service";
 import { updateViewingStatusSchema } from "@/features/viewings/schemas/viewing.schema";
 import { requireRole } from "@/lib/auth/guards";
 import { apiErrorResponse } from "@/lib/errors/api-error";
-import { connectToDatabase } from "@/lib/db/mongoose";
 
 type ViewingStatusRouteContext = {
   params: Promise<{
@@ -18,7 +17,6 @@ export async function PATCH(
 ) {
   try {
     await requireRole(["admin", "manager", "agent", "staff"]);
-    await connectToDatabase();
 
     const { id } = await context.params;
 

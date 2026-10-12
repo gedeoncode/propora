@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
-import { connectToDatabase } from "@/lib/db/mongoose";
 import { requireRole } from "@/lib/auth/guards";
 import { propertyService } from "@/features/properties/services/property.service";
 import {
@@ -64,7 +63,6 @@ export default async function PropertyEditPage({
   searchParams,
 }: PropertyEditPageProps) {
   await requireRole(["admin", "manager", "agent", "staff"]);
-  await connectToDatabase();
 
   const { id } = await params;
   const { error } = await searchParams;

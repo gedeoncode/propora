@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 
 import { customerService } from "@/features/customers/services/customer.service";
 import { updateCustomerSchema } from "@/features/customers/schemas/customer.schema";
-import { connectToDatabase } from "@/lib/db/mongoose";
 import { requireRole } from "@/lib/auth/guards";
 import { apiErrorResponse } from "@/lib/errors/api-error";
 
@@ -17,7 +16,6 @@ export async function GET(
 ) {
   try {
     await requireRole(["admin", "manager", "agent"]);
-    await connectToDatabase();
 
     const { id } = await context.params;
     const customer = await customerService.getById(id);

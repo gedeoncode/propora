@@ -9,6 +9,7 @@ import type {
   ViewingStatus,
   ViewingType,
 } from "@/features/viewings/types/viewing";
+import { withDatabase } from "@/lib/db/with-db";
 
 export type ViewingListFilters = {
   status?: ViewingStatus;
@@ -23,10 +24,11 @@ export type ViewingListFilters = {
 
 export const viewingRepository = {
   async findById(id: string) {
-    return Viewing.findById(id).exec();
+    return withDatabase(() => Viewing.findById(id).exec());
   },
 
   async list(filters: ViewingListFilters = {}) {
+    return withDatabase(async () => {
     const query: Record<string, unknown> = {};
 
     if (filters.status) {
@@ -79,6 +81,7 @@ export const viewingRepository = {
       .populate("leadId", "firstName lastName")
       .sort({ scheduledAt: 1 })
       .exec();
+  })
   },
 
   async findConflictingViewing(
@@ -87,6 +90,7 @@ export const viewingRepository = {
     durationMinutes: number,
     excludeViewingId?: string,
   ) {
+    return withDatabase(async () => {
     const requestedEnd = new Date(
       scheduledAt.getTime() + durationMinutes * 60_000,
     );
@@ -118,17 +122,18 @@ export const viewingRepository = {
         return viewingEnd > scheduledAt;
       }) ?? null
     );
+  })
   },
 
   async create(input: CreateViewingInput) {
-    return Viewing.create(input);
+    return withDatabase(() => Viewing.create(input));
   },
 
   async updateById(id: string, input: UpdateViewingInput) {
-    return Viewing.findByIdAndUpdate(id, input, {
+    return withDatabase(() => Viewing.findByIdAndUpdate(id, input, {
       new: true,
       runValidators: true,
-    }).exec();
+    }).exec());
   },
 
   async updateStatus(
@@ -136,6 +141,7 @@ export const viewingRepository = {
     status: ViewingStatus,
     cancellationReason?: string,
   ) {
+    return withDatabase(() => {
     const update: {
       status: ViewingStatus;
       cancellationReason?: string | null;
@@ -153,13 +159,14 @@ export const viewingRepository = {
       new: true,
       runValidators: true,
     }).exec();
+  })
   },
 
   async existsByLeadId(leadId: string) {
-    return Viewing.exists({ leadId });
+    return withDatabase(() => Viewing.exists({ leadId }));
   },
 
   async deleteById(id: string) {
-    return Viewing.findByIdAndDelete(id).exec();
+    return withDatabase(() => Viewing.findByIdAndDelete(id).exec());
   },
 };

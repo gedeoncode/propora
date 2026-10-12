@@ -8,6 +8,7 @@ import type {
   UpdateUserInput,
 } from "@/features/users/schemas/user.schema";
 import type { UserRole, UserStatus } from "@/features/users/types/user";
+import { withDatabase } from "@/lib/db/with-db";
 
 export type UserListFilters = {
   role?: UserRole;
@@ -16,25 +17,27 @@ export type UserListFilters = {
 };
 
 export const userRepository = {
+
   async findById(id: string) {
-    return User.findById(id).exec();
+    return withDatabase(() => User.findById(id).exec());
   },
 
   async findByEmail(email: string) {
-    return User.findOne({
+    return withDatabase(() => User.findOne({
       email: email.toLowerCase(),
-    }).exec();
+    }).exec());
   },
 
   async findByEmailWithPassword(email: string) {
-    return User.findOne({
+    return withDatabase(() => User.findOne({
       email: email.toLowerCase(),
     })
       .select("+passwordHash")
-      .exec();
+      .exec());
   },
 
   async list(filters: UserListFilters = {}) {
+    return withDatabase(async () => {
     const query: Record<string, unknown> = {};
 
     if (filters.role) {
@@ -60,6 +63,7 @@ export const userRepository = {
     return User.find(query)
       .sort({ createdAt: -1 })
       .exec();
+  })
   },
 
   async create(
@@ -68,57 +72,65 @@ export const userRepository = {
     },
     session?: ClientSession,
   ) {
+    return withDatabase(async () => {
     if (session) {
       const [user] = await User.create([input], { session });
       return user;
     }
 
     return User.create(input);
+  })
   },
 
   async updateById(id: string, input: UpdateUserInput) {
-    return User.findByIdAndUpdate(id, input, {
-      new: true,
-      runValidators: true,
-    }).exec();
+    return withDatabase(() => 
+      User.findByIdAndUpdate(id, input, {
+        new: true,
+        runValidators: true,
+      }).exec());
   },
 
   async updateRole(id: string, role: UserRole) {
-    return User.findByIdAndUpdate(
-      id,
-      { role },
-      {
-        new: true,
-        runValidators: true,
-      },
-    ).exec();
+    return withDatabase(() =>
+      User.findByIdAndUpdate(
+        id,
+        { role },
+        {
+          new: true,
+          runValidators: true,
+        },
+    ).exec());
   },
 
   async updateStatus(id: string, status: UserStatus) {
-    return User.findByIdAndUpdate(
-      id,
+    return withDatabase(() =>
+      User.findByIdAndUpdate(
+        id,
       { status },
       {
         new: true,
         runValidators: true,
       },
-    ).exec();
+    ).exec());
   },
 
   async updateLastLogin(id: string) {
-    return User.findByIdAndUpdate(
-      id,
+    return withDatabase(() =>
+      User.findByIdAndUpdate(
+        id,
       { lastLoginAt: new Date() },
       {
         new: true,
         runValidators: true,
       },
-    ).exec();
+    ).exec());
   },
 
   async existsByEmail(email: string) {
-    return User.exists({
-      email: email.toLowerCase(),
-    });
+    return withDatabase(() =>
+      User.exists({
+        email: email.toLowerCase(),
+      })
+    );
   },
 };

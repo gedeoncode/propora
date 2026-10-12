@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { connectToDatabase } from "@/lib/db/mongoose";
 import { requireRole } from "@/lib/auth/guards";
 import { propertyService } from "@/features/properties/services/property.service";
 import { PropertyMedia } from "@/features/properties/types/property";
@@ -40,7 +39,6 @@ export default async function PropertyDetailPage({
   params,
 }: PropertyDetailPageProps) {
   await requireRole(["admin", "manager", "agent", "staff"]);
-  await connectToDatabase();
 
   const { id } = await params;
 

@@ -6,7 +6,6 @@ import { agentService } from "@/features/agents/services/agent.service";
 import { leadService } from "@/features/leads/services/lead.service";
 import { propertyService } from "@/features/properties/services/property.service";
 import { LEAD_SOURCES } from "@/features/leads/types/lead";
-import { connectToDatabase } from "@/lib/db/mongoose";
 import { requireRole } from "@/lib/auth/guards";
 
 import LeadEditForm from "@/features/leads/components/lead-edit-form";
@@ -19,7 +18,6 @@ const ALLOWED_ROLES = ["admin", "manager", "agent", "staff"] as const;
 
 export default async function EditLeadPage({ params }: PageProps) {
   await requireRole([...ALLOWED_ROLES]);
-  await connectToDatabase();
 
   const { id } = await params;
 

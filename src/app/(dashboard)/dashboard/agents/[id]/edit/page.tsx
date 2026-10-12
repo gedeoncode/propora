@@ -9,7 +9,6 @@ import { SPECIALIZATIONS } from "@/features/agents/constants/constants";
 import { agentService } from "@/features/agents/services/agent.service";
 import { updateAgentSchema } from "@/features/agents/schemas/agent.schema";
 import { requireRole } from "@/lib/auth/guards";
-import { connectToDatabase } from "@/lib/db/mongoose";
 
 const inputClassName =
   "mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:border-ring focus:ring-2 focus:ring-ring/20";
@@ -28,8 +27,6 @@ async function updateAgentAction(agentId: string, formData: FormData) {
   "use server";
 
   const user = await requireRole(["admin", "manager"]);
-
-  await connectToDatabase();
 
   const rawInput = {
     firstName: getText(formData, "firstName"),

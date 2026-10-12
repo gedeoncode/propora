@@ -1,18 +1,14 @@
-
 "use client";
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import {
-  Building2,
-  PanelLeft,
-  CircleUserRound,
-} from "lucide-react";
+import { Building2, PanelLeft, CircleUserRound } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "cn";
 import { DashboardNavigation } from "./dashboard-navigation";
-import { clientEnv, clientEnv } from "@/config/env.client";
+import { clientEnv } from "@/config/env.client";
+import Image from "next/image";
 
 type DashboardSidebarProps = {
   displayName: string;
@@ -28,19 +24,14 @@ export function DashboardSidebar({
   const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
-    setCollapsed(
-      window.localStorage.getItem(STORAGE_KEY) === "true",
-    );
+    setCollapsed(window.localStorage.getItem(STORAGE_KEY) === "true");
   }, []);
 
   function toggleCollapsed() {
     setCollapsed((current) => {
       const next = !current;
 
-      window.localStorage.setItem(
-        STORAGE_KEY,
-        String(next),
-      );
+      window.localStorage.setItem(STORAGE_KEY, String(next));
 
       return next;
     });
@@ -68,8 +59,14 @@ export function DashboardSidebar({
             onClick={toggleCollapsed}
             className="flex size-10 items-center justify-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring"
           >
-            <span className="flex size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-              <Building2 className="size-4" aria-hidden="true" />
+            <span className="relative flex size-8 shrink-0 items-center justify-center">
+              <Image
+                src="/images/logo.png"
+                alt="Propora logo"
+                fill
+                sizes="32px"
+                className="object-contain"
+              />
             </span>
           </button>
         ) : (
@@ -79,23 +76,28 @@ export function DashboardSidebar({
               aria-label="Propora overview"
               className="flex min-w-0 items-center gap-2.5 rounded-md font-semibold tracking-tight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring"
             >
-              <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                <Building2 className="size-4" aria-hidden="true" />
+              <span className="relative flex size-8 shrink-0 items-center justify-center">
+                <Image
+                  src="/images/logo.png"
+                  alt=""
+                  fill
+                  sizes="32px"
+                  className="object-contain"
+                />
               </span>
 
-              <span>{clientEnv.NEXT_PUBLIC_APP_NAME}</span>
+              <span className="truncate">{clientEnv.NEXT_PUBLIC_APP_NAME}</span>
             </Link>
 
             <Button
               type="button"
               variant="ghost"
-              
-              className="text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground p-2"
+              className="p-2 text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground"
               aria-label="Collapse sidebar"
               title="Collapse sidebar"
               onClick={toggleCollapsed}
             >
-              <PanelLeft aria-hidden="true" className="size-5 " />
+              <PanelLeft aria-hidden="true" className="size-5" />
             </Button>
           </>
         )}
@@ -120,13 +122,9 @@ export function DashboardSidebar({
 
           {!collapsed && (
             <div className="min-w-0">
-              <p className="truncate text-sm font-medium">
-                {displayName}
-              </p>
+              <p className="truncate text-sm font-medium">{displayName}</p>
 
-              <p className="text-xs text-muted-foreground">
-                {roleLabel}
-              </p>
+              <p className="text-xs text-muted-foreground">{roleLabel}</p>
             </div>
           )}
         </div>

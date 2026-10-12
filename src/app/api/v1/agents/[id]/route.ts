@@ -4,6 +4,7 @@ import { apiErrorResponse } from "@/lib/errors/api-error";
 
 import { updateAgentSchema } from "@/features/agents/schemas/agent.schema";
 import { agentService } from "@/features/agents/services/agent.service";
+import { requireAdmin } from "@/lib/auth/guards";
 
 type AgentRouteContext = {
   params: Promise<{
@@ -16,6 +17,7 @@ export async function GET(
   context: AgentRouteContext,
 ) {
   try {
+    await requireAdmin();
     const { id } = await context.params;
 
     const agent = await agentService.getById(id);
@@ -34,6 +36,7 @@ export async function PATCH(
   context: AgentRouteContext,
 ) {
   try {
+    await requireAdmin();
     const { id } = await context.params;
 
     const body: unknown = await request.json();

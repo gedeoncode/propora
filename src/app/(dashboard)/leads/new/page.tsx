@@ -1,20 +1,19 @@
-
 import Link from "next/link";
 
 import { agentService } from "@/features/agents/services/agent.service";
 import { propertyService } from "@/features/properties/services/property.service";
 import { LEAD_SOURCES } from "@/features/leads/types/lead";
-import { connectToDatabase } from "@/lib/db/mongoose";
 import { requireRole } from "@/lib/auth/guards";
 
 import LeadForm from "@/features/leads/components/lead-form";
 import { logger } from "@/lib/logger";
+import { ArrowLeft, User } from "lucide-react";
+import { PageHeader } from "@/components/layout/page-header";
 
 const ALLOWED_ROLES = ["admin", "manager", "agent", "staff"] as const;
 
 export default async function NewLeadPage() {
   await requireRole([...ALLOWED_ROLES]);
-  await connectToDatabase();
 
   const [agents, properties] = await Promise.all([
     agentService.list("active"),
@@ -42,27 +41,26 @@ export default async function NewLeadPage() {
     id: property._id.toString(),
     label: `${property.title} — ${property.location.city}`,
   }));
-  logger.info(`Fetched ${agentOptions.length} agents and ${properties.items.length} properties for lead form options.`,
+  logger.info(
+    `Fetched ${agentOptions.length} agents and ${properties.items.length} properties for lead form options.`,
   );
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6">
-      <div className="space-y-2">
+    <div className=" space-y-6">
+      <div className="space-y-3">
         <Link
           href="/leads"
-          className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
-          ← Back to leads
+          <ArrowLeft className="size-4" aria-hidden="true" />
+          Back to Leads
         </Link>
-
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">
-            Add lead
-          </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Record a new prospect and capture their property interests.
-          </p>
-        </div>
+        
+        <PageHeader
+          icon={<User className="size-5" aria-hidden="true" />}
+          title="Add Lead"
+          description="Record a new prospect and capture their property interests."
+        />
       </div>
 
       <LeadForm

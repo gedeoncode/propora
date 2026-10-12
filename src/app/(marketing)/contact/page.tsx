@@ -1,249 +1,318 @@
+
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRight,
+  ArrowUpRight,
   Clock3,
-  Mail,
-  MapPin,
   MessageCircle,
   ShieldCheck,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { clientEnv } from "@/config/env.client";
 import { ContactForm } from "@/features/contact/components/contact-form";
 
 export const metadata: Metadata = {
-  title: "Contact Us",
+  title: `Contact Us | ${clientEnv.NEXT_PUBLIC_APP_NAME}`,
   description:
-    "Contact Propora for help finding a property, listing your property, or learning more about our real-estate services.",
+    "Have a question about a property or your next move? Contact Propora for guidance on your property journey.",
 };
 
-const contactOptions = [
+const contactPaths = [
   {
-    title: "Property assistance",
+    number: "01",
+    title: "Finding a property",
     description:
-      "Need help finding a property or want to learn more about a listing?",
-    icon: MapPin,
-    detail: "Explore properties",
+      "Looking for a place to call home or an opportunity that fits your plans?",
     href: "/discover",
+    linkLabel: "Explore properties",
   },
   {
-    title: "Speak with our team",
+    number: "02",
+    title: "Speaking with an agent",
     description:
-      "Explore our agent directory to find the right person to help with your property needs.",
-    icon: MessageCircle,
-    detail: "Meet our agents",
+      "Want to connect with a property professional about your next move?",
     href: "/agents",
+    linkLabel: "Meet our agents",
+  },
+];
+
+const nextSteps = [
+  {
+    number: "01",
+    title: "Tell us what you need",
+    description:
+      "Choose a subject and share enough detail for us to understand your question.",
+  },
+  {
+    number: "02",
+    title: "Your inquiry is submitted",
+    description:
+      "We'll record your message so the team can review your inquiry.",
+  },
+  {
+    number: "03",
+    title: "Take the next step",
+    description:
+      "Your contact details give the team a way to follow up about your request.",
   },
 ];
 
 export default function ContactPage() {
   return (
-    <div className="bg-background">
-      {/* Hero */}{" "}
-      <section className="border-b border-border bg-muted/30">
-        {" "}
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
-          {" "}
-          <div className="max-w-3xl">
-            {" "}
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
-              Contact Propora{" "}
-            </p>
-            <h1 className="mt-4 text-4xl font-semibold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-              Let&apos;s find the right way forward.
-            </h1>
-            <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
-              Whether you are exploring properties, considering listing one, or
-              simply have a question, we are here to help.
-            </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Button render={<Link href="/discover" />}>
-                Explore properties
-                <ArrowRight className="ml-2 size-4" />
-              </Button>
+    <main id="main-content" className="min-h-screen bg-background">
+      {/* Hero */}
+      <section className="relative isolate overflow-hidden bg-brand-950 text-white">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 -z-10 bg-[radial-gradient(120%_120%_at_15%_0%,var(--color-brand-900)_0%,var(--color-brand-950)_45%,#0a1226_100%)]"
+        />
 
-              <Button variant="outline" render={<Link href="/agents" />}>
-                Meet our agents
-              </Button>
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 -z-10 opacity-[0.14] [background-image:linear-gradient(to_right,rgba(255,255,255,.6)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,.6)_1px,transparent_1px)] [background-size:64px_64px] [mask-image:radial-gradient(90%_70%_at_50%_10%,black,transparent)]"
+        />
+
+        <div className="page-container">
+          <div className="grid gap-12 py-16 sm:py-20 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center lg:gap-16 lg:py-24">
+            <div className="max-w-xl">
+              <p className="flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-300">
+                <span
+                  aria-hidden="true"
+                  className="h-px w-8 bg-brand-400/60"
+                />
+                Let's talk property
+              </p>
+
+              <h1 className="mt-6 text-[2.125rem] font-semibold leading-[1.08] tracking-[-0.02em] sm:text-5xl lg:text-[3.5rem]">
+                Every property journey starts with a{" "}
+                <span className="text-brand-300">question.</span>
+              </h1>
+
+              <p className="mt-6 max-w-lg text-base leading-7 text-white/70 sm:text-[1.0625rem] sm:leading-8">
+                Whether you're searching for a place to call home,
+                exploring an investment, or figuring out your next
+                move, we're here to help you find a clearer way forward.
+              </p>
+
+              <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="h-12 px-6 text-[0.9375rem] font-semibold hover:bg-brand-50"
+                  render={
+                    <Link href="#contact-form">
+                      Send us a message
+                    </Link>
+                  }
+                >
+                  Send us a message
+                  <ArrowRight className="ml-2 size-4" aria-hidden="true" />
+                </Button>
+
+                <Link
+                  href="/discover"
+                  className="group inline-flex items-center gap-2 text-sm font-medium text-white/75 transition-colors hover:text-white"
+                >
+                  Explore properties
+                  <ArrowUpRight
+                    className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                    aria-hidden="true"
+                  />
+                </Link>
+              </div>
             </div>
+
+            <aside
+              aria-labelledby="contact-paths-heading"
+              className="border-t border-white/15 pt-6 lg:ml-auto lg:w-full lg:max-w-lg"
+            >
+              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-brand-300">
+                A good place to start
+              </p>
+
+              <h2
+                id="contact-paths-heading"
+                className="mt-3 text-xl font-semibold tracking-tight sm:text-2xl"
+              >
+                What brings you here?
+              </h2>
+
+              <p className="mt-3 text-sm leading-6 text-white/65">
+                If you're ready to explore, you can start with the
+                resources that best match your needs.
+              </p>
+
+              <div className="mt-6 divide-y divide-white/15 border-y border-white/15">
+                {contactPaths.map((path) => (
+                  <div
+                    key={path.number}
+                    className="grid grid-cols-[2rem_minmax(0,1fr)] gap-4 py-5"
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="pt-1 font-mono text-xs tabular-nums text-brand-300"
+                    >
+                      {path.number}
+                    </span>
+
+                    <div>
+                      <h3 className="font-semibold tracking-tight">
+                        {path.title}
+                      </h3>
+
+                      <p className="mt-2 text-sm leading-6 text-white/65">
+                        {path.description}
+                      </p>
+
+                      <Link
+                        href={path.href}
+                        className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-brand-300 transition-colors hover:text-white"
+                      >
+                        {path.linkLabel}
+                        <ArrowRight
+                          className="size-4"
+                          aria-hidden="true"
+                        />
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </aside>
           </div>
         </div>
       </section>
-      {/* Contact form and supporting information */}
+
+      {/* Contact form and process */}
       <section
         id="contact-form"
-        className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8"
+        aria-labelledby="contact-form-heading"
+        className="scroll-mt-24 border-b border-border bg-background"
       >
-        <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(280px,0.7fr)] lg:gap-16">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-primary">
-              Send us a message
-            </p>
-
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-              How can we help?
-            </h2>
-
-            <p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base sm:leading-7">
-              Share a few details about your inquiry. Fill in the form below,
-              and we&apos;ll have the information needed to follow up with you.
-            </p>
-
-            <div className="mt-8 rounded-2xl border border-border bg-card p-5 sm:p-8">
-              <ContactForm />
-            </div>
-          </div>
-
-          <aside className="space-y-8 lg:pt-2">
+        <div className="page-container">
+          <div className="grid gap-12 py-16 sm:py-20 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-16 lg:py-24">
             <div>
-              <h3 className="text-xl font-semibold tracking-tight text-foreground">
-                A little more information
-              </h3>
-
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                Not sure where to start? These resources can help you take the
-                next step.
-              </p>
-            </div>
-
-            <div className="space-y-6">
-              <div className="flex gap-4">
-                <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  <Clock3 className="size-5" aria-hidden="true" />
-                </div>
-
-                <div>
-                  <h4 className="font-semibold text-foreground">
-                    What happens next?
-                  </h4>
-
-                  <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                    Your message is recorded as an inquiry so your team can
-                    review the details and follow up using your contact
-                    information.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  <ShieldCheck className="size-5" aria-hidden="true" />
-                </div>
-
-                <div>
-                  <h4 className="font-semibold text-foreground">
-                    Your information
-                  </h4>
-
-                  <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                    We use the details you provide to understand and respond to
-                    your inquiry. Please avoid including sensitive personal
-                    information in your message.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-border bg-muted/30 p-6">
-              <div className="flex size-11 items-center justify-center rounded-xl bg-background text-primary">
-                <Mail className="size-5" aria-hidden="true" />
-              </div>
-
-              <h4 className="mt-4 font-semibold text-foreground">
-                Looking for a property?
-              </h4>
-
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                Browse the available listings and explore properties that match
-                your needs.
+              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-primary">
+                Get in touch
               </p>
 
-              <Link
-                href="/discover"
-                className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary transition-colors hover:text-primary/80"
+              <h2
+                id="contact-form-heading"
+                className="mt-3 text-[1.75rem] font-semibold leading-tight tracking-tight sm:text-4xl"
               >
-                Browse listings
-                <ArrowRight className="size-4" aria-hidden="true" />
-              </Link>
+                Let's work out your next step.
+              </h2>
+
+              <p className="mt-4 max-w-xl text-base leading-7 text-muted-foreground">
+                Tell us a little about what you're looking for.
+                Share your question, explain what you need, and
+                give us the context to understand your inquiry.
+              </p>
+
+              <div className="mt-8 rounded-xl border border-border bg-card p-5 sm:p-8">
+                <ContactForm />
+              </div>
             </div>
-          </aside>
-        </div>
-      </section>
-      {/* Quick links */}
-      <section className="border-t border-border bg-muted/20">
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-          <div className="max-w-2xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-primary">
-              Explore Propora
-            </p>
 
-            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-              Your next property decision starts here.
-            </h2>
+            <aside className="lg:pt-2">
+              <div className="lg:sticky lg:top-24">
+                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-primary">
+                  What happens next
+                </p>
 
-            <p className="mt-3 text-sm leading-6 text-muted-foreground sm:text-base">
-              Whether you&apos;re buying, renting, or listing a property, start
-              by exploring our available resources.
-            </p>
-          </div>
+                <h3 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">
+                  A clearer process, from the start.
+                </h3>
 
-          <div className="mt-8 grid gap-5 md:grid-cols-2">
-            {contactOptions.map((option) => {
-              const Icon = option.icon;
+                <p className="mt-4 max-w-lg text-sm leading-6 text-muted-foreground sm:text-base sm:leading-7">
+                  Getting in touch should be straightforward.
+                  Here's how the contact process works.
+                </p>
 
-              return (
-                <article
-                  key={option.title}
-                  className="rounded-2xl border border-border bg-card p-6 transition-shadow hover:shadow-md sm:p-8"
-                >
-                  <div className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                    <Icon className="size-5" aria-hidden="true" />
+                <ol className="mt-8 divide-y divide-border border-y border-border">
+                  {nextSteps.map((step) => (
+                    <li
+                      key={step.number}
+                      className="grid grid-cols-[2rem_minmax(0,1fr)] gap-4 py-6"
+                    >
+                      <span
+                        aria-hidden="true"
+                        className="pt-1 font-mono text-sm tabular-nums text-muted-foreground"
+                      >
+                        {step.number}
+                      </span>
+
+                      <div>
+                        <h4 className="font-semibold tracking-tight">
+                          {step.title}
+                        </h4>
+
+                        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                          {step.description}
+                        </p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+
+                <div className="mt-8 flex items-start gap-4 rounded-xl border border-border bg-muted/30 p-5">
+                  <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-background text-primary">
+                    <ShieldCheck
+                      className="size-5"
+                      aria-hidden="true"
+                    />
                   </div>
 
-                  <h3 className="mt-5 text-lg font-semibold tracking-tight text-foreground">
-                    {option.title}
-                  </h3>
+                  <div>
+                    <h4 className="font-semibold tracking-tight">
+                      Your information matters
+                    </h4>
 
-                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                    {option.description}
-                  </p>
-
-                  <Link
-                    href={option.href}
-                    className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-primary transition-colors hover:text-primary/80"
-                  >
-                    {option.detail}
-                    <ArrowRight className="size-4" aria-hidden="true" />
-                  </Link>
-                </article>
-              );
-            })}
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                      Please share only the information needed to
+                      explain your inquiry. Avoid including
+                      sensitive personal information in your message.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </aside>
           </div>
+        </div>
+      </section>
 
-          <div className="mt-10 rounded-2xl bg-primary p-8 text-primary-foreground sm:p-10 lg:flex lg:items-center lg:justify-between lg:gap-8">
-            <div className="max-w-2xl">
-              <h3 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-                Ready to explore your options?
-              </h3>
+      {/* Closing CTA */}
+      <section className="bg-muted/50">
+        <div className="page-container">
+          <div className="flex flex-col gap-6 py-14 sm:py-16 md:flex-row md:items-end md:justify-between">
+            <div className="max-w-xl">
+              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-primary">
+                Your next move
+              </p>
 
-              <p className="mt-3 text-sm leading-6 text-primary-foreground/80 sm:text-base">
-                Discover listings and take the next step toward your property
-                goals.
+              <h2 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">
+                Still exploring your options?
+              </h2>
+
+              <p className="mt-3 text-sm leading-6 text-muted-foreground sm:text-base">
+                Browse the available listings and discover properties
+                that could be right for you.
               </p>
             </div>
 
             <Button
-              variant="secondary"
+              size="lg"
+              className="h-11 shrink-0 self-start md:self-auto"
               render={<Link href="/discover" />}
-              className="mt-6 shrink-0 lg:mt-0"
             >
               Browse properties
-              <ArrowRight className="ml-2 size-4" />
+              <ArrowUpRight className="ml-2 size-4" aria-hidden="true" />
             </Button>
           </div>
         </div>
       </section>
-    </div>
+    </main>
   );
 }

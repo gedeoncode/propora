@@ -1,12 +1,10 @@
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
-import { connectToDatabase } from "@/lib/db/mongoose";
 
 export const runtime = "nodejs";
 
 export async function GET() {
   try {
-    await connectToDatabase();
 
     const connected = mongoose.connection.readyState === 1;
 

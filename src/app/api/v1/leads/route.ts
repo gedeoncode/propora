@@ -7,7 +7,6 @@ import {
   LEAD_SOURCES,
   LEAD_STATUSES,
 } from "@/features/leads/types/lead";
-import { connectToDatabase } from "@/lib/db/mongoose";
 import { requireRole } from "@/lib/auth/guards";
 import { AppError } from "@/lib/errors/app-error";
 import { apiErrorResponse } from "@/lib/errors/api-error";
@@ -29,7 +28,6 @@ function isLeadSource(value: string) {
 export async function GET(request: NextRequest) {
   try {
     await requireRole([...ALLOWED_ROLES]);
-    await connectToDatabase();
 
     const searchParams = request.nextUrl.searchParams;
     const status = searchParams.get("status");

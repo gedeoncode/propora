@@ -2,11 +2,12 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { requireRole } from "@/lib/auth/guards";
-import { connectToDatabase } from "@/lib/db/mongoose";
 import { propertyService } from "@/features/properties/services/property.service";
 import { createPropertySchema } from "@/features/properties/schemas/property.schema";
 import { uploadPropertyImage } from "@/lib/storage/cloudinary-upload";
 import { logger } from "@/lib/logger";
+import { ArrowLeft, CalendarDays, Home } from "lucide-react";
+import { PageHeader } from "@/components/layout/page-header";
 
 const inputClassName =
   "mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:border-ring focus:ring-2 focus:ring-ring/20";
@@ -31,8 +32,6 @@ async function createPropertyAction(formData: FormData) {
   "use server";
   const user = await requireRole(["admin", "manager", "agent", "staff"]);
 
-  await connectToDatabase();
-
   const mediaFiles = formData
     .getAll("media")
     .filter((value): value is File => value instanceof File && value.size > 0);
@@ -42,8 +41,7 @@ async function createPropertyAction(formData: FormData) {
     description: getText(formData, "description"),
     propertyType: getText(formData, "propertyType"),
     listingType: getText(formData, "listingType"),
-    availabilityStatus:
-      getText(formData, "availabilityStatus") || "available",
+    availabilityStatus: getText(formData, "availabilityStatus") || "available",
     price: Number(getText(formData, "price")),
     currency: getText(formData, "currency") || "KES",
     location: {
@@ -109,22 +107,19 @@ export default async function NewPropertyPage() {
 
   return (
     <main className="space-y-6">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">
-            Add property
-          </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Create a property record. New properties start as drafts.
-          </p>
-        </div>
-
+      <div className="space-y-3">
         <Link
           href="/properties"
-          className="rounded-md border border-border px-3 py-2 text-sm font-medium hover:bg-muted"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
-          Back to properties
+          <ArrowLeft className="size-4" aria-hidden="true" />
+          Back to Properties
         </Link>
+        <PageHeader
+          icon={<Home className="size-5" aria-hidden="true" />}
+          title="Add property"
+          description="Create a property record. New properties start as drafts."
+        />
       </div>
 
       <form action={createPropertyAction} className="space-y-6">

@@ -5,7 +5,6 @@ import { leadService } from "@/features/leads/services/lead.service";
 import { LEAD_SOURCES, LEAD_STATUSES } from "@/features/leads/types/lead";
 import type { LeadSource, LeadStatus } from "@/features/leads/types/lead";
 import { LeadActions } from "@/features/leads/components/lead-actions";
-import { connectToDatabase } from "@/lib/db/mongoose";
 import { requireRole } from "@/lib/auth/guards";
 import { PageHeader } from "@/components/layout/page-header";
 import { StatusBadge } from "@/components/ui/status-badge";
@@ -99,7 +98,6 @@ function getResultsEnd(count: number) {
 }
 export default async function LeadsPage({ searchParams }: LeadsPageProps) {
   await requireRole([...ALLOWED_ROLES]);
-  await connectToDatabase();
 
   const params = await searchParams;
   const status = isLeadStatus(params.status) ? params.status : undefined;

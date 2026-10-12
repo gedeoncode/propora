@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 
 import { propertyService } from "@/features/properties/services/property.service";
-import { connectToDatabase } from "@/lib/db/mongoose";
 import { requireRole } from "@/lib/auth/guards";
 import { apiErrorResponse } from "@/lib/errors/api-error";
 
@@ -22,7 +21,6 @@ export async function POST(
 ) {
   try {
     await requireRole(ALLOWED_ROLES);
-    await connectToDatabase();
 
     const { id } = await params;
 

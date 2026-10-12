@@ -9,7 +9,6 @@ import {
 } from "lucide-react";
 
 import { dashboardService } from "@/features/analytics/services/dashboard.service";
-import { connectToDatabase } from "@/lib/db/mongoose";
 import { PageHeader } from "@/components/layout/page-header";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { SummaryCard } from "@/components/shared/summary-card";
@@ -57,7 +56,6 @@ function formatViewingType(type: string) {
 }
 
 export default async function DashboardPage() {
-  await connectToDatabase();
 
   const {
     scope,

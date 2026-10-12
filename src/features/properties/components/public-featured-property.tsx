@@ -2,7 +2,6 @@
 import Link from "next/link";
 import { ArrowRight, MapPin } from "lucide-react";
 
-import { connectToDatabase } from "@/lib/db/mongoose";
 import { propertyService } from "@/features/properties/services/property.service";
 
 const propertyTypeLabels: Record<string, string> = {
@@ -35,7 +34,6 @@ export async function PublicFeaturedProperties() {
   >["items"] = [];
 
   try {
-    await connectToDatabase();
 
     const result = await propertyService.listPublic({}, {
       page: 1,

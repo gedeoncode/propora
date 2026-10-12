@@ -17,7 +17,6 @@ import {
   type ViewingStatus,
   type ViewingType,
 } from "@/features/viewings/types/viewing";
-import { connectToDatabase } from "@/lib/db/mongoose";
 import { requireRole } from "@/lib/auth/guards";
 import { PageHeader } from "@/components/layout/page-header";
 import { SummaryCard } from "@/components/shared/summary-card";
@@ -138,7 +137,6 @@ export default async function ViewingsPage({
   searchParams: Promise<SearchParams>;
 }) {
   await requireRole(["admin", "manager", "agent", "staff"]);
-  await connectToDatabase();
 
   const params = await searchParams;
 

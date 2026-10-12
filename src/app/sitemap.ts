@@ -1,7 +1,6 @@
 
 import type { MetadataRoute } from "next";
 
-import { connectToDatabase } from "@/lib/db/mongoose";
 import { propertyService } from "@/features/properties/services/property.service";
 
 import { clientEnv } from "@/config/env.client";
@@ -22,7 +21,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   try {
-    await connectToDatabase();
 
     const firstPage = await propertyService.listPublic({}, {
       page: 1,

@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 
 import { propertyService } from "@/features/properties/services/property.service";
-import { connectToDatabase } from "@/lib/db/mongoose";
 import { requireRole } from "@/lib/auth/guards";
 import {
   PROPERTY_AVAILABILITY_STATUSES,
@@ -117,7 +116,6 @@ export default async function PropertiesPage({
   searchParams,
 }: PropertiesPageProps) {
   await requireRole(["admin", "manager", "agent", "staff"]);
-  await connectToDatabase();
 
   const params = await searchParams;
 

@@ -4,7 +4,6 @@ import { z } from "zod";
 
 import { leadService } from "@/features/leads/services/lead.service";
 import { propertyService } from "@/features/properties/services/property.service";
-import { connectToDatabase } from "@/lib/db/mongoose";
 import { AppError } from "@/lib/errors/app-error";
 import { apiErrorResponse } from "@/lib/errors/api-error";
 
@@ -41,8 +40,6 @@ export async function POST(request: NextRequest) {
     if (input.website) {
       return NextResponse.json({ success: true });
     }
-
-    await connectToDatabase();
 
     const property = await propertyService.getBySlug(input.slug);
 
