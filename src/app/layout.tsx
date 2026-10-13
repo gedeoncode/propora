@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: {
     default: `${clientEnv.NEXT_PUBLIC_APP_NAME} | Real Estate Management`,
-    template: "%s | ${clientEnv.NEXT_PUBLIC_APP_NAME}",
+    template: `%s | ${clientEnv.NEXT_PUBLIC_APP_NAME}`,
   },
   description:
     "Discover properties and manage real estate operations with ${clientEnv.NEXT_PUBLIC_APP_NAME}.",
