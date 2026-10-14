@@ -7,12 +7,15 @@ export const listingTypeLabels = {
 
 export function humanizeStatus(status: string): string {
   return status
-    .split("_") 
+    .split("_")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 }
 
-export const propertyTypeLabels: Record<(typeof PROPERTY_TYPES)[number], string> = {
+export const propertyTypeLabels: Record<
+  (typeof PROPERTY_TYPES)[number],
+  string
+> = {
   apartment: "Apartment",
   house: "House",
   townhouse: "Townhouse",
@@ -61,4 +64,36 @@ export function buildHref(
 
   const qs = query.toString();
   return qs ? `/discover?${qs}` : "/discover";
+}
+
+export const PAGE_SIZE = 12;
+
+export function firstParam(
+  value: string | string[] | undefined,
+): string | undefined {
+  return typeof value === "string" ? value : undefined;
+}
+
+export function parsePrice(value: string | undefined): number | undefined {
+  if (!value?.trim()) return undefined;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : undefined;
+}
+
+/** Compute the set of pagination page numbers to render (with -1 as ellipsis). */
+export function getPageNumbers(
+  current: number,
+  total: number,
+): (number | -1)[] {
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+
+  const pages: (number | -1)[] = [1];
+  const start = Math.max(2, current - 1);
+  const end = Math.min(total - 1, current + 1);
+
+  if (start > 2) pages.push(-1);
+  for (let i = start; i <= end; i++) pages.push(i);
+  if (end < total - 1) pages.push(-1);
+  pages.push(total);
+  return pages;
 }
