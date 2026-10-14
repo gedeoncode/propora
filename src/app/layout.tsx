@@ -5,7 +5,9 @@ import "./globals.css";
 
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { clientEnv } from "@/config/env.client";
-
+// vercel analytics and SpeedInsights
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -46,6 +48,9 @@ export default function RootLayout({
         /> */}
 
         <ThemeProvider>{children}</ThemeProvider>
+
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
