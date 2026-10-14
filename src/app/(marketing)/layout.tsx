@@ -97,8 +97,8 @@ function NavigationLinks({ mobile = false }: { mobile?: boolean }) {
 
 function MarketingHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b border-border/70 bg-background/90 backdrop-blur-md supports-[backdrop-filter]:bg-background/80">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-40 border-b border-border/70 bg-background/90 backdrop-blur-md supports-backdrop-filter:bg-background/80">
+      <div className="flex h-16 items-center justify-between gap-4 page-container">
         <Wordmark />
 
         <NavigationLinks />
@@ -159,7 +159,7 @@ function MarketingHeader() {
 
       {/* Secondary nav row: only where the primary nav can't fit inline */}
       <div className="border-t border-border/60 lg:hidden">
-        <div className="mx-auto max-w-7xl overflow-x-auto px-4 [scrollbar-width:none] sm:px-6 [&::-webkit-scrollbar]:hidden">
+        <div className="mx-auto max-w-7xl overflow-x-auto px-4 scrollbar-none sm:px-6 [&::-webkit-scrollbar]:hidden">
           <NavigationLinks mobile />
         </div>
       </div>
@@ -170,7 +170,7 @@ function MarketingHeader() {
 function MarketingFooter() {
   return (
     <footer className="border-t border-border bg-card">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8">
+      <div className="py-12 sm:py-14 page-container">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1fr)] lg:gap-12">
           <div className="max-w-sm">
             <Wordmark compact />

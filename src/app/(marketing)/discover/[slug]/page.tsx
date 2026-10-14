@@ -15,7 +15,7 @@ import { PublicPropertyInquiryForm } from "@/features/leads/components/public-in
 import { PropertyDetailPageProps } from "@/features/properties/types/public-page-props";
 import { getPropertyBySlug } from "@/features/properties/services/public-property-query";
 import { PropertyGallery } from "@/features/properties/components/public-property-gallery";
-import { MobileInquiryBar } from "@/features/properties/components/public-mobile-inquiry-bar";
+import { MobileInquiryBar } from "@/features/properties/components/public/public-mobile-inquiry-bar";
 import { PropertyMedia } from "@/features/properties/types/property";
 
 const propertyTypeLabels: Record<string, string> = {
