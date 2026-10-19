@@ -18,27 +18,27 @@ export const primaryNavigation = [
 export const moduleNavigation = [
   {
     label: "Properties",
-    href: "/properties",
+    href: "/dashboard/properties",
     icon: Building2,
   },
   {
     label: "Leads",
-    href: "/leads",
+    href: "/dashboard/leads",
     icon: UserRoundSearch,
   },
   {
     label: "Customers",
-    href: "/customers",
+    href: "/dashboard/customers",
     icon: Users,
   },
   {
     label: "Viewings",
-    href: "/viewings",
+    href: "/dashboard/viewings",
     icon: CalendarDays,
   },
   {
     label: "Agents",
-    href: "/agents",
+    href: "/dashboard/agents",
     icon: CircleUserRound,
   },
 ] as const;
