@@ -48,7 +48,7 @@ async function updateAgentAction(agentId: string, formData: FormData) {
 
   await agentService.update(agentId, parsed.data);
 
-  redirect(`/agents/${agentId}`);
+  redirect(`/dashboard/agents/${agentId}`);
 }
 
 type EditAgentPageProps = {
@@ -62,12 +62,10 @@ export default async function EditAgentPage({ params }: EditAgentPageProps) {
 
   await requireRole(["admin", "manager", "staff"]);
 
-  await connectToDatabase();
-
   const agent = await agentService.getById(id);
 
   if (!agent) {
-    redirect("/agents");
+    redirect("/dashboard/agents");
   }
 
   const updateAction = updateAgentAction.bind(null, id);
@@ -76,7 +74,7 @@ export default async function EditAgentPage({ params }: EditAgentPageProps) {
     <main className="mx-auto max-w-5xl space-y-6">
       <div className="space-y-1">
         <Link
-          href={`/agents/${id}`}
+          href={`/dashboard/agents/${id}`}
           className="text-sm font-medium text-sky-600 hover:text-sky-700"
         >
           ← Back to agent

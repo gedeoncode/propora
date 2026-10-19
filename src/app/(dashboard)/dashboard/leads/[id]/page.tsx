@@ -143,7 +143,7 @@ export default async function LeadDetailsPage({ params }: PageProps) {
     <div className="mx-auto max-w-6xl space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <Link
-          href="/leads"
+          href="/dashboard/leads"
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           <span aria-hidden="true">←</span>
@@ -151,7 +151,7 @@ export default async function LeadDetailsPage({ params }: PageProps) {
         </Link>
 
         <Link
-          href={`/leads/${id}/edit`}
+          href={`/dashboard/leads/${id}/edit`}
           className="inline-flex h-9 items-center justify-center rounded-md border border-input px-3 text-sm font-medium transition-colors hover:bg-muted"
         >
           Edit lead

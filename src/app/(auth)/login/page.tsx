@@ -4,6 +4,8 @@ import { ArrowUpRight, Building2, ShieldCheck } from "lucide-react";
 
 import { clientEnv } from "@/config/env.client";
 import { LoginForm } from "@/features/auth/components/login-form";
+import { Wordmark } from "@/components/shared/word-mark";
+
 
 export default function LoginPage() {
   const appName = clientEnv.NEXT_PUBLIC_APP_NAME;
@@ -58,19 +60,7 @@ export default function LoginPage() {
         </div>
 
         {/* Brand */}
-        <Link
-          href="/"
-          className="relative z-10 inline-flex w-fit items-center gap-3 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-300"
-          aria-label={`${appName} home`}
-        >
-          <span className="flex size-10 items-center justify-center rounded-lg border border-white/15 bg-white/10">
-            <Building2 className="size-5 text-brand-300" />
-          </span>
-
-          <span className="text-lg font-semibold tracking-tight">
-            {appName}
-          </span>
-        </Link>
+       <Wordmark withBackground />
 
         {/* Brand message */}
         <div className="relative z-10 mb-10 max-w-xl xl:mb-14">
@@ -81,7 +71,7 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <h2 className="max-w-lg text-4xl font-semibold leading-[1.12] tracking-tight xl:text-5xl">
+          <h2 className="max-w-lg text-foreground text-4xl font-semibold leading-[1.12] tracking-tight xl:text-5xl">
             Your property business.
             <span className="mt-2 block text-brand-300">
               In better focus.

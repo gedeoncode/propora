@@ -54,7 +54,7 @@ export default async function AgentDetailPage({
        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-1">
           <Link
-            href="/agents"
+            href="/dashboard/agents"
             className="text-sm font-medium text-sky-600 hover:text-sky-700"
           >
             ← Back to agents
@@ -71,7 +71,7 @@ export default async function AgentDetailPage({
 
         <div className="flex gap-2">
           <Link
-            href={`/agents/${agent._id}/edit`}
+            href={`/dashboard/agents/${agent._id}/edit`}
             className="inline-flex items-center justify-center rounded-md border px-4 py-2 text-sm font-medium transition-colors hover:bg-muted"
           >
             Edit agent

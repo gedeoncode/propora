@@ -8,6 +8,7 @@ import {
 } from "@/features/agents/types/agent";
 import { PageHeader } from "@/components/layout/page-header";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { clientEnv } from "@/config/env.client";
 
 type SearchParams = {
   status?: string;
@@ -58,7 +59,7 @@ export default async function AgentsPage({
         title="Agents"
         description={`Manage the professional agent profiles connected to ${clientEnv.NEXT_PUBLIC_APP_NAME} accounts.`}
         action={{
-          href: "/agents/new",
+          href: "/dashboard/agents/new",
           label: "Add agent",
         }}
       />
@@ -109,7 +110,7 @@ export default async function AgentsPage({
             </p>
 
             <Link
-              href="/agents/new"
+              href="/dashboard/agents/new"
               className="mt-4 inline-flex rounded-md border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
             >
               Add the first agent
@@ -197,9 +198,9 @@ export default async function AgentsPage({
 
                     <td className="px-4 py-4">
                       <Link
-                        href={`/agents/${agent._id.toString()}`}
+                        href={`/dashboard/agents/${agent._id.toString()}`}
                         className="font-medium text-primary hover:underline"
-                      >
+                      > 
                         View
                       </Link>
                     </td>

@@ -187,7 +187,7 @@ export default async function ViewingsPage({
         title="Viewings"
         description="Schedule and manage property appointments across your team."
         action={{
-          href: "/viewings/new",
+          href: "/dashboard/viewings/new",
           label: "Schedule viewing",
         }}
       />
@@ -236,7 +236,7 @@ export default async function ViewingsPage({
           </div>
 
           <form
-            action="/viewings"
+            action="/dashboard/viewings"
             method="get"
             className="grid gap-3 sm:grid-cols-[1fr_1fr_auto_auto]"
           >
@@ -328,7 +328,7 @@ export default async function ViewingsPage({
 
             {hasFilters && (
               <Link
-                href="/viewings"
+                href="/dashboard/viewings"
                 className="mt-4 inline-flex text-sm font-medium text-primary hover:underline"
               >
                 Clear filters
@@ -370,7 +370,7 @@ export default async function ViewingsPage({
 
                         <div className="max-w-65">
                           <Link
-                            href={`/viewings/${viewing._id.toString()}`}
+                            href={`/dashboard/viewings/${viewing._id.toString()}`}
                             className="font-medium hover:text-primary"
                           >
                             {viewing.propertyId?.title ??

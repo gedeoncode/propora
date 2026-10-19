@@ -43,6 +43,7 @@ export const moduleNavigation = [
   },
 ] as const;
 
+
 export const allNavigation = [...primaryNavigation, ...moduleNavigation];
 
 export type NavigationItem = (typeof allNavigation)[number];

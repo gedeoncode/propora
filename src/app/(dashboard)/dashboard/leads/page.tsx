@@ -143,7 +143,7 @@ export default async function LeadsPage({ searchParams }: LeadsPageProps) {
         title="Leads"
         description="Track prospects, manage follow-ups, and turn enquiries into customers."
         action={{
-          href: "/leads/new",
+          href: "/dashboard/leads/new",
           label: "Add lead",
         }}
       />
@@ -156,7 +156,7 @@ export default async function LeadsPage({ searchParams }: LeadsPageProps) {
       </div>
 
       <form
-        action="/leads"
+        action="/dashboard/leads"
         method="GET"
         className="rounded-xl border border-border bg-card"
       >
@@ -215,7 +215,7 @@ export default async function LeadsPage({ searchParams }: LeadsPageProps) {
           <div className="flex flex-wrap items-center justify-end gap-2 border-t border-border pt-4">
             {hasFilters ? (
               <Link
-                href="/leads"
+                href="/dashboard/leads"
                 className="inline-flex h-8 items-center justify-center rounded-lg border border-border bg-background px-2.5 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
               >
                 Clear filters
@@ -245,7 +245,7 @@ export default async function LeadsPage({ searchParams }: LeadsPageProps) {
 
           {hasFilters ? (
             <Link
-              href="/leads"
+              href="/dashboard/leads"
               className="inline-flex h-8 items-center justify-center rounded-lg px-2.5 text-sm font-medium text-primary transition-colors hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
             >
               View all leads
@@ -268,7 +268,7 @@ export default async function LeadsPage({ searchParams }: LeadsPageProps) {
             </p>
             {!hasFilters && (
               <Link
-                href="/leads/new"
+                href="/dashboard/leads/new"
                 className="mt-4 inline-flex h-9 items-center justify-center rounded-md bg-primary px-3 text-sm font-medium text-primary-foreground hover:bg-primary/90"
               >
                 Add your first lead
@@ -322,7 +322,7 @@ export default async function LeadsPage({ searchParams }: LeadsPageProps) {
 
                           <div className="min-w-0">
                             <Link
-                              href={`/leads/${id}`}
+                              href={`/dashboard/leads/${id}`}
                               className="font-medium transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
                             >
                               {lead.firstName} {lead.lastName}

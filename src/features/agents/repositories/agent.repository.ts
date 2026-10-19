@@ -56,6 +56,7 @@ export const agentRepository = {
         {
           $match: {
             "user.role": { $ne: "admin" },
+            "user.firstName": { $ne: "Tester" },
           },
         },
         {

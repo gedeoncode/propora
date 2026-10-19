@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SPECIALIZATIONS } from "@/features/agents/constants/constants";
-import { createAgentSchema } from "@/features/agents/schemas/agent.schema";
+import { createAgentWithUserSchema } from "@/features/agents/schemas/agent.schema";
 import { agentService } from "@/features/agents/services/agent.service";
 import { requireRole } from "@/lib/auth/guards";
+import { AppError } from "@/lib/errors/app-error";
 const inputClassName =
   "mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:border-ring focus:ring-2 focus:ring-ring/20";
 
@@ -24,7 +25,7 @@ function getOptionalText(formData: FormData, name: string) {
 async function createAgentAction(formData: FormData) {
   "use server";
 
-  const user = await requireRole(["admin", "staff"]);
+  await requireRole(["admin", "staff"]);
 
   const rawInput = {
     firstName: getText(formData, "firstName"),
@@ -39,16 +40,19 @@ async function createAgentAction(formData: FormData) {
       .map((value) => String(value).trim())
       .filter(Boolean),
   };
-
-  const parsed = createAgentSchema.safeParse(rawInput);
+  const parsed = createAgentWithUserSchema.safeParse(rawInput);
 
   if (!parsed.success) {
-    throw new Error("Please correct the agent details and try again.");
+    throw new AppError(
+      "VALIDATION_ERROR",
+      "Invalid input data. Please check the form fields and try again.",
+   
+    );
   }
 
-  const agent = await agentService.create(parsed.data, user.id);
+  const { agent } = await agentService.createWithUser(parsed.data);
 
-  redirect(`/agents/${agent._id.toString()}`);
+  redirect(`/dashboard/agents/${agent._id.toString()}`);
 }
 
 export default async function NewAgentPage() {
@@ -71,7 +75,7 @@ export default async function NewAgentPage() {
           </p>
         </div>
         <Link
-          href="/agents"
+          href="/dashboard/agents"
           aria-label="Back to agents"
           className="rounded-md border border-border px-3 py-2 text-sm font-medium hover:bg-muted"
         >

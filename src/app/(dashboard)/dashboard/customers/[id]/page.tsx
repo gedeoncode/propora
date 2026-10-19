@@ -68,14 +68,11 @@ export default async function CustomerDetailsPage({
       <PageHeader
         title={customerName}
         description="Customer profile and CRM information."
-        action={
-          <Link
-            href={`/customers/${customerId}/edit`}
-            className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-          >
-            Edit customer
-          </Link>
-        }
+        action={{
+          href: `/dashboard/customers/${customerId}/edit`,
+          label: "Edit customer",
+        }}
+      
       />
 
       <div className="flex flex-wrap items-center gap-3">

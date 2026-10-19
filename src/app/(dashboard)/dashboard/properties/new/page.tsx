@@ -99,7 +99,7 @@ async function createPropertyAction(formData: FormData) {
     user.id,
   );
 
-  redirect(`/properties/${property._id.toString()}`);
+  redirect(`/dashboard/properties/${property._id.toString()}`);
 }
 
 export default async function NewPropertyPage() {
@@ -109,7 +109,7 @@ export default async function NewPropertyPage() {
     <main className="space-y-6">
       <div className="space-y-3">
         <Link
-          href="/properties"
+          href="/dashboard/properties"
           className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           <ArrowLeft className="size-4" aria-hidden="true" />
@@ -395,7 +395,7 @@ export default async function NewPropertyPage() {
 
         <div className="flex justify-end gap-3">
           <Link
-            href="/properties"
+            href="/dashboard/properties"
             className="rounded-md border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
           >
             Cancel

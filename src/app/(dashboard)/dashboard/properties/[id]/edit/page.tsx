@@ -76,14 +76,13 @@ export default async function PropertyEditPage({
   }
 
   if (property.publicationStatus === "archived") {
-    redirect(`/properties/${property._id}`);
+    redirect(`/dashboard/properties/${property._id}`);
   }
 
   async function updatePropertyAction(formData: FormData) {
     "use server";
 
     await requireRole(["admin", "manager", "agent", "staff"]);
-    await connectToDatabase();
 
     const rawInput = {
       title: getString(formData, "title"),
@@ -136,7 +135,7 @@ export default async function PropertyEditPage({
     <main className="mx-auto max-w-5xl space-y-6 ">
       <div className="space-y-1">
         <Link
-          href={`/properties/${property._id}`}
+          href={`/dashboard/properties/${property._id}`}
           className="text-sm font-medium text-sky-600 hover:text-sky-700"
         >
           ← Back to property
@@ -465,7 +464,7 @@ export default async function PropertyEditPage({
 
         <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
           <Link
-            href={`/properties/${property._id}`}
+            href={`/dashboard/properties/${property._id}`}
             className="inline-flex items-center justify-center rounded-md border px-5 py-2.5 text-sm font-medium hover:bg-muted"
           >
             Cancel

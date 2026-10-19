@@ -55,7 +55,7 @@ export default async function PropertyDetailPage({
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-1">
           <Link
-            href="/properties"
+            href="/dashboard/properties"
             className="text-sm font-medium text-sky-600 hover:text-sky-700"
           >
             ← Back to properties
@@ -72,7 +72,7 @@ export default async function PropertyDetailPage({
 
         <div className="flex gap-2">
           <Link
-            href={`/properties/${property._id}/edit`}
+            href={`/dashboard/properties/${property._id}/edit`}
             className="inline-flex items-center justify-center rounded-md border px-4 py-2 text-sm font-medium transition-colors hover:bg-muted"
           >
             Edit property

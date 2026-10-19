@@ -1,10 +1,10 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { clientEnv } from "@/config/env.client";
+import { Wordmark } from "@/components/shared/word-mark";
 
 const navigation = [
   { label: "Buy", href: "/discover?listingType=sale" },
@@ -34,40 +34,6 @@ const footerGroups = [
   },
 ];
 
-
-
-function Wordmark({ compact = false }: { compact?: boolean }) {
-  return (
-    <Link
-      href="/"
-      aria-label={`${clientEnv.NEXT_PUBLIC_APP_NAME} home`}
-      className="inline-flex shrink-0 items-center gap-2.5 rounded-md text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-    >
-      <span
-        className={`relative flex shrink-0 items-center justify-center ${
-          compact ? "size-8" : "size-9"
-        }`}
-      >
-        <Image
-          src="/images/logo.png"
-          alt="Propora logo"
-          fill
-          sizes={compact ? "32px" : "36px"}
-          className="object-contain"
-          priority
-        />
-      </span>
-
-      <span
-        className={`font-semibold tracking-tight ${
-          compact ? "text-base" : "text-[1.0625rem]"
-        }`}
-      >
-        {clientEnv.NEXT_PUBLIC_APP_NAME}
-      </span>
-    </Link>
-  );
-}
 function NavigationLinks({ mobile = false }: { mobile?: boolean }) {
   return (
     <nav

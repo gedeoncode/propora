@@ -73,15 +73,15 @@ export default async function CustomersPage({
         title="Customers"
         description="Manage customer profiles, preferences, and relationships."
         action={{
-          href: "/customers/new",
+          href: "/dashboard/customers/new",
           label: "Add customer",
         }}
       />
-
+ 
       <section className="space-y-4">
         <div className="rounded-xl border border-border bg-card">
           <form
-            action="/customers"
+            action="/dashboard/customers"
             method="GET"
             className="flex flex-col gap-4 p-4 sm:p-5"
           >

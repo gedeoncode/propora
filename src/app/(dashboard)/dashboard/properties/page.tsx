@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowRight,
   BedDouble,
@@ -230,7 +231,7 @@ export default async function PropertiesPage({
         title="Properties"
         description="Manage your property inventory, listings, availability, and publication status."
         action={{
-          href: "/properties/new",
+          href: "/dashboard/properties/new",
           label: "Add property",
         }}
       />
@@ -295,7 +296,7 @@ export default async function PropertiesPage({
 
                 {hasFilters ? (
                   <Button variant="ghost">
-                    <Link href="/properties">Clear</Link>
+                    <Link href="/dashboard/properties">Clear</Link>
                   </Button>
                 ) : null}
               </div>
@@ -444,7 +445,7 @@ export default async function PropertiesPage({
           ) : null}
 
           <Link
-            href="/properties"
+            href="/dashboard/properties"
             className="ml-1 rounded-md px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
           >
             Clear all
@@ -498,7 +499,7 @@ export default async function PropertiesPage({
             <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
               {hasFilters ? (
                 <Link
-                  href="/properties"
+                  href="/dashboard/properties"
                   className="inline-flex h-8 items-center justify-center rounded-lg border border-border bg-background px-2.5 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
                 >
                   Clear filters
@@ -506,7 +507,7 @@ export default async function PropertiesPage({
               ) : null}
 
               <Link
-                href="/properties/new"
+                href="/dashboard/properties/new"
                 className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg bg-primary px-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/80 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
               >
                 <Plus className="size-4" aria-hidden="true" />
@@ -551,6 +552,7 @@ export default async function PropertiesPage({
                 <tbody className="divide-y divide-border">
                   {items.map((property) => {
                     const specifications = property.specifications;
+                    const coverImage = property.media[0]
 
                     return (
                       <tr
@@ -559,15 +561,27 @@ export default async function PropertiesPage({
                       >
                         <td className="px-5 py-4">
                           <Link
-                            href={`/properties/${property._id.toString()}`}
+                            href={`/dashboard/properties/${property._id.toString()}`}
                             className="block rounded-md focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
                           >
                             <div className="flex items-start gap-3">
-                              <div className="hidden size-10 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground sm:flex">
-                                <Building2
-                                  className="size-4"
-                                  aria-hidden="true"
-                                />
+                              <div className="relative hidden size-14 shrink-0 overflow-hidden rounded-lg bg-muted sm:block">
+                                {coverImage?.url ? (
+                                  <Image
+                                    src={coverImage.url}
+                                    alt={coverImage.alt || property.title}
+                                    fill
+                                    sizes="56px"
+                                    className="object-cover"
+                                  />
+                                ) : (
+                                  <div className="flex size-full items-center justify-center text-muted-foreground">
+                                    <Building2
+                                      className="size-5"
+                                      aria-hidden="true"
+                                    />
+                                  </div>
+                                )}
                               </div>
 
                               <div className="min-w-0">
@@ -688,7 +702,7 @@ export default async function PropertiesPage({
               <div className="flex items-center gap-2">
                 {pagination.page > 1 ? (
                   <Link
-                    href={`/properties?${previousPageQuery}`}
+                    href={`/dashboard/properties?${previousPageQuery}`}
                     className="inline-flex h-8 items-center justify-center rounded-lg border border-border bg-background px-2.5 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
                   >
                     Previous
@@ -701,7 +715,7 @@ export default async function PropertiesPage({
 
                 {pagination.page < pagination.totalPages ? (
                   <Link
-                    href={`/properties?${nextPageQuery}`}
+                    href={`/dashboard/properties?${nextPageQuery}`}
                     className="inline-flex h-8 items-center justify-center rounded-lg border border-border bg-background px-2.5 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
                   >
                     Next

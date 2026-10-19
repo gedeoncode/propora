@@ -69,7 +69,7 @@ export default async function EditLeadPage({ params }: PageProps) {
     <div className="mx-auto max-w-4xl space-y-6">
       <div className="space-y-2">
         <Link
-          href={`/leads/${id}`}
+          href={`/dashboard/leads/${id}`}
           className="text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           ← Back to lead
