@@ -3,7 +3,7 @@ import "server-only";
 
 import Agent from "@/features/agents/models/agent.model";
 import Customer from "@/features/customers/models/customer.model";
-import Lead from "@/features/leads/models/lead.mode";
+import Lead from "@/features/leads/models/lead.model";
 import Property from "@/features/properties/models/property.model";
 import Viewing from "@/features/viewings/models/viewing.model";
 import { withDatabase } from "@/lib/db/with-db";

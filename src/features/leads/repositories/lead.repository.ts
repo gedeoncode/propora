@@ -1,6 +1,6 @@
 import "server-only";
 
-import Lead from "@/features/leads/models/lead.mode";
+import Lead from "@/features/leads/models/lead.model";
 import type {
   CreateLeadInput,
   UpdateLeadInput,

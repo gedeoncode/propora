@@ -35,13 +35,52 @@ export const agentRepository = {
   },
 
   async list(status?: "active" | "inactive" | "suspended") {
-    const query = status ? { status } : {};
+    const matchStage = status ? { status } : {};
 
     return withDatabase(async () => {
-      return Agent.find(query)
-        .populate("userId", "firstName lastName email")
-        .sort({ createdAt: -1 })
-        .exec();
+      return Agent.aggregate([
+        {
+          $match: matchStage,
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "userId",
+            foreignField: "_id",
+            as: "user",
+          },
+        },
+        {
+          $unwind: "$user",
+        },
+        {
+          $match: {
+            "user.role": { $ne: "admin" },
+          },
+        },
+        {
+          $sort: {
+            createdAt: -1,
+          },
+        },
+        {
+          $project: {
+            bio: 1,
+            profileImageUrl: 1,
+            licenseNumber: 1,
+            specializations: 1,
+            status: 1,
+            createdAt: 1,
+            updatedAt: 1,
+            userId: {
+              _id: "$user._id",
+              firstName: "$user.firstName",
+              lastName: "$user.lastName",
+              email: "$user.email",
+            },
+          },
+        },
+      ]).exec();
     });
   },
 
@@ -50,8 +89,8 @@ export const agentRepository = {
       if (session) {
         const [agent] = await Agent.create([input], { session });
 
-      return agent;
-    }
+        return agent;
+      }
 
       return Agent.create(input);
     });

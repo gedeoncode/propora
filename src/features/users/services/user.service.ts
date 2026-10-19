@@ -71,7 +71,7 @@ export const userService = {
       firstName: data.firstName,
       lastName: data.lastName,
       email: data.email,
-      role: "staff",
+      role: data.role,
       passwordHash,
     });
   },

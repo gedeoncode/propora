@@ -79,7 +79,6 @@ export type PropertyRecord = {
   createdBy: Types.ObjectId;
   publishedAt?: Date | null;
   createdAt: Date;
-  updatedAt: Date;
-};
+  updatedAt: Date; };
 
 
