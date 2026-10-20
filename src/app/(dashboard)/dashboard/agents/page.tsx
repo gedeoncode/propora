@@ -76,7 +76,7 @@ export default async function AgentsPage({
 
           <div className="flex flex-wrap gap-2">
             <Link
-              href="/agents"
+              href="/dashboard/agents"
               className={`rounded-md border px-3 py-2 text-xs font-medium ${
                 !status
                   ? "border-primary bg-primary/5 text-primary"
@@ -89,7 +89,7 @@ export default async function AgentsPage({
             {AGENT_STATUSES.map((agentStatus) => (
               <Link
                 key={agentStatus}
-                href={`/agents?status=${agentStatus}`}
+                href={`/dashboard/agents?status=${agentStatus}`}
                 className={`rounded-md border px-3 py-2 text-xs font-medium ${
                   status === agentStatus
                     ? "border-primary bg-primary/5 text-primary"
@@ -139,7 +139,7 @@ export default async function AgentsPage({
                     <td className="px-4 py-4">
                       <div>
                         <Link
-                          href={`/agents/${agent._id.toString()}`}
+                          href={`/dashboard/agents/${agent._id.toString()}`}
                           className="font-medium hover:text-primary"
                         >
                           {agent.userId.firstName} {agent.userId.lastName}

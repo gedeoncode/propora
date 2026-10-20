@@ -241,7 +241,7 @@ export default async function NewAgentPage() {
           <Button
             type="button"
             variant="outline"
-            render={<Link href="/agents">Cancel</Link>}
+            render={<Link href="/dashboard/agents">Cancel</Link>}
           />
 
           <Button type="submit">Create agent</Button>

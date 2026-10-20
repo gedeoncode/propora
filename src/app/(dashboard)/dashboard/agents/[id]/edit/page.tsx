@@ -224,7 +224,7 @@ export default async function EditAgentPage({ params }: EditAgentPageProps) {
           <Button
             type="button"
             variant="outline"
-            render={<Link href={`/agents/${id}`}>Cancel</Link>}
+            render={<Link href={`/dashboard/agents/${id}`}>Cancel</Link>}
           />
 
           <Button type="submit">Save changes</Button>
