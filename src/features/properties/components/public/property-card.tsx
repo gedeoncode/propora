@@ -1,7 +1,14 @@
+
 import { Bath, BedDouble, MapPin, Ruler } from "lucide-react";
 import Link from "next/link";
 import { propertyService } from "../../services/property.service";
-import { formatArea, formatPrice, humanizeStatus, listingTypeLabels, propertyTypeLabels } from "../../constants/property.contants";
+import {
+  formatArea,
+  formatPrice,
+  humanizeStatus,
+  listingTypeLabels,
+  propertyTypeLabels,
+} from "../../constants/property.contants";
 import { PropertyType, ListingType, PropertyMedia } from "../../types/property";
 
 type PropertyCardProps = {
@@ -12,22 +19,29 @@ type PropertyCardProps = {
   featured?: boolean;
 };
 
-export function PropertyCard({ property, image, featured }: PropertyCardProps) {
+export function PropertyCard({
+  property,
+  image,
+  featured,
+}: PropertyCardProps) {
   const locationText = [property.location.city, property.location.region]
     .filter(Boolean)
     .join(", ");
 
+  const specifications = property.specifications;
+
   return (
     <article
-      className={`group relative overflow-hidden rounded-xl border border-border bg-card transition-all hover:border-foreground/15 hover:shadow-md ${
+      className={`group relative min-w-0 overflow-hidden rounded-xl border border-border bg-card transition-all hover:border-foreground/15 hover:shadow-sm ${
         featured ? "sm:col-span-2 xl:col-span-2" : ""
       }`}
     >
       <Link
         href={`/discover/${property.slug}`}
-        className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+        className="block min-w-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
         aria-label={`View ${property.title}`}
       >
+        {/* Image */}
         <div
           className={`relative overflow-hidden bg-muted ${
             featured ? "aspect-video sm:aspect-21/9" : "aspect-4/3"
@@ -47,50 +61,48 @@ export function PropertyCard({ property, image, featured }: PropertyCardProps) {
             </div>
           )}
 
-          {/* Subtle bottom scrim for legibility of chips */}
           <div
             className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-linear-to-t from-foreground/40 to-transparent"
             aria-hidden="true"
           />
 
-          <span className="absolute left-3 top-3 inline-flex items-center rounded-md bg-background/95 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-foreground shadow-sm backdrop-blur-sm">
+          <span className="absolute left-3 top-3 inline-flex max-w-[calc(100%-1.5rem)] items-center truncate rounded-md bg-background/95 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-foreground shadow-sm backdrop-blur-sm">
             {listingTypeLabels[property.listingType as ListingType]}
           </span>
 
           {property.availabilityStatus !== "available" && (
-            <span className="absolute right-3 top-3 inline-flex items-center rounded-md bg-foreground/85 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-background backdrop-blur-sm">
+            <span className="absolute right-3 top-3 inline-flex max-w-[calc(100%-1.5rem)] items-center truncate rounded-md bg-foreground/85 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-background backdrop-blur-sm">
               {humanizeStatus(property.availabilityStatus)}
             </span>
           )}
         </div>
 
-        <div className={featured ? "p-5 sm:p-6" : "p-4"}>
-          <div className="flex items-start justify-between gap-3">
-            <div className="min-w-0">
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-primary">
-                {propertyTypeLabels[property.propertyType as PropertyType]}
-              </p>
-              <h3
-                className={`mt-1.5 line-clamp-2 font-semibold leading-snug text-card-foreground transition-colors group-hover:text-primary ${
-                  featured ? "text-lg sm:text-xl" : "text-[0.9375rem]"
-                }`}
-              >
-                {property.title}
-              </h3>
-            </div>
-          </div>
+        {/* Details */}
+        <div className={featured ? "min-w-0 p-4 sm:p-6" : "min-w-0 p-3 sm:p-4"}>
+          <p className="truncate text-[11px] font-semibold uppercase tracking-wider text-primary">
+            {propertyTypeLabels[property.propertyType as PropertyType]}
+          </p>
 
-          <p className="mt-2 flex items-center gap-1.5 text-sm text-muted-foreground">
+          <h3
+            className={`mt-1.5 line-clamp-2 font-semibold leading-snug text-card-foreground transition-colors group-hover:text-primary ${
+              featured ? "text-lg sm:text-xl" : "text-[0.9375rem]"
+            }`}
+          >
+            {property.title}
+          </h3>
+
+          <p className="mt-2 flex min-w-0 items-center gap-1.5 text-sm text-muted-foreground">
             <MapPin className="size-3.5 shrink-0" aria-hidden="true" />
-            <span className="truncate">
+            <span className="min-w-0 truncate">
               {locationText || "Location not specified"}
             </span>
           </p>
 
-          <div className="mt-4 flex items-baseline justify-between gap-3 border-t border-border pt-3.5">
+          {/* Price */}
+          <div className="mt-4 min-w-0 border-t border-border pt-3.5">
             <p
-              className={`font-semibold tracking-tight text-foreground ${
-                featured ? "text-2xl" : "text-xl"
+              className={`min-w-0 break-words font-semibold tracking-tight text-foreground ${
+                featured ? "text-xl sm:text-2xl" : "text-lg sm:text-xl"
               }`}
             >
               {formatPrice(property.price, property.currency)}
@@ -101,26 +113,36 @@ export function PropertyCard({ property, image, featured }: PropertyCardProps) {
               )}
             </p>
 
-            <div className="flex items-center gap-3 text-xs text-muted-foreground">
-              {property.specifications?.bedrooms !== undefined && (
-                <span className="inline-flex items-center gap-1">
-                  <BedDouble className="size-3.5" aria-hidden="true" />
-                  {property.specifications.bedrooms}
+            {/* Specifications: wrap instead of clipping */}
+            <div
+              className="mt-3 flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2 text-xs text-muted-foreground"
+              aria-label="Property specifications"
+            >
+              {specifications?.bedrooms !== undefined && (
+                <span className="inline-flex shrink-0 items-center gap-1 whitespace-nowrap">
+                  <BedDouble className="size-3.5 shrink-0" aria-hidden="true" />
+                  <span>{specifications.bedrooms}</span>
+                  <span className="sr-only">bedrooms</span>
                 </span>
               )}
-              {property.specifications?.bathrooms !== undefined && (
-                <span className="inline-flex items-center gap-1">
-                  <Bath className="size-3.5" aria-hidden="true" />
-                  {property.specifications.bathrooms}
+
+              {specifications?.bathrooms !== undefined && (
+                <span className="inline-flex shrink-0 items-center gap-1 whitespace-nowrap">
+                  <Bath className="size-3.5 shrink-0" aria-hidden="true" />
+                  <span>{specifications.bathrooms}</span>
+                  <span className="sr-only">bathrooms</span>
                 </span>
               )}
-              {property.specifications?.area !== undefined && (
-                <span className="inline-flex items-center gap-1">
-                  <Ruler className="size-3.5" aria-hidden="true" />
-                  {formatArea(
-                    property.specifications.area,
-                    property.specifications.areaUnit,
-                  )}
+
+              {specifications?.area !== undefined && (
+                <span className="inline-flex min-w-0 items-center gap-1">
+                  <Ruler className="size-3.5 shrink-0" aria-hidden="true" />
+                  <span className="min-w-0 break-words">
+                    {formatArea(
+                      specifications.area,
+                      specifications.areaUnit,
+                    )}
+                  </span>
                 </span>
               )}
             </div>

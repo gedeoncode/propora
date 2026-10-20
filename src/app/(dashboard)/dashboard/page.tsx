@@ -133,7 +133,7 @@ export default async function DashboardPage() {
 
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <Link
-            href="/properties/new"
+            href="/dashboard/properties/new"
             className="group flex items-center gap-3 rounded-xl border border-border bg-card p-4 transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
           >
             <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
@@ -160,7 +160,7 @@ export default async function DashboardPage() {
           </Link>
 
           <Link
-            href="/leads/new"
+            href="/dashboard/leads/new"
             className="group flex items-center gap-3 rounded-xl border border-border bg-card p-4 transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
           >
             <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
@@ -187,7 +187,7 @@ export default async function DashboardPage() {
           </Link>
 
           <Link
-            href="/customers/new"
+            href="/dashboard/customers/new"
             className="group flex items-center gap-3 rounded-xl border border-border bg-card p-4 transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
           >
             <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
@@ -214,7 +214,7 @@ export default async function DashboardPage() {
           </Link>
 
           <Link
-            href="/viewings/new"
+            href="/dashboard/viewings/new"
             className="group flex items-center gap-3 rounded-xl border border-border bg-card p-4 transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
           >
             <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
@@ -258,7 +258,7 @@ export default async function DashboardPage() {
             </div>
 
             <Link
-              href="/viewings"
+              href="/dashboard/viewings"
               className="inline-flex shrink-0 items-center gap-1.5 rounded-md px-2 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
             >
               View all
@@ -287,7 +287,7 @@ export default async function DashboardPage() {
               </p>
 
               <Link
-                href="/viewings/new"
+                href="/dashboard/viewings/new"
                 className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
               >
                 <Plus
@@ -325,7 +325,7 @@ export default async function DashboardPage() {
                 return (
                   <Link
                     key={String(viewing._id)}
-                    href={`/viewings/${String(viewing._id)}`}
+                    href={`/dashboard/viewings/${String(viewing._id)}`}
                     className="group flex flex-col gap-4 p-5 transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-inset focus-visible:ring-ring/50 sm:flex-row sm:items-center"
                   >
                     <div className="min-w-0 flex-1">
@@ -467,7 +467,7 @@ export default async function DashboardPage() {
               </div>
 
               <Link
-                href="/leads"
+                href="/dashboard/leads"
                 className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
               >
                 {metrics.leads.active}

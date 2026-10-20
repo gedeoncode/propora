@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { clientEnv } from "@/config/env.client";
 
-const THEME_STORAGE_KEY = `${clientEnv.NEXT_PUBLIC_APP_NAME}-theme`;
+const THEME_STORAGE_KEY = `${clientEnv.NEXT_PUBLIC_APP_THEME_NAME}`;
 
 type Theme = "light" | "dark";
 

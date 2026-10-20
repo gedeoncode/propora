@@ -3,6 +3,9 @@
 
 import { useState, type FormEvent } from "react";
 import { CheckCircle2, LoaderCircle, Send } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 
 type PublicPropertyInquiryFormProps = {
   slug: string;
@@ -93,13 +96,13 @@ export function PublicPropertyInquiryForm({
           >
             First name
           </label>
-          <input
+          <Input
             id="inquiry-first-name"
             name="firstName"
             autoComplete="given-name"
             required
             maxLength={100}
-            className="h-10 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="h-10 w-full px-3"
           />
         </div>
 
@@ -110,13 +113,13 @@ export function PublicPropertyInquiryForm({
           >
             Last name
           </label>
-          <input
+          <Input
             id="inquiry-last-name"
             name="lastName"
             autoComplete="family-name"
             required
             maxLength={100}
-            className="h-10 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="h-10 "
           />
         </div>
       </div>
@@ -128,13 +131,13 @@ export function PublicPropertyInquiryForm({
         >
           Email address
         </label>
-        <input
+        <Input
           id="inquiry-email"
           name="email"
           type="email"
           autoComplete="email"
           maxLength={254}
-          className="h-10 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="h-10 "
           placeholder="you@example.com"
         />
       </div>
@@ -146,13 +149,13 @@ export function PublicPropertyInquiryForm({
         >
           Phone number
         </label>
-        <input
+        <Input
           id="inquiry-phone"
           name="phone"
           type="tel"
           autoComplete="tel"
           maxLength={30}
-          className="h-10 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="h-10 w-full px-3"
           placeholder="+254..."
         />
         <p className="mt-1 text-xs text-muted-foreground">
@@ -167,13 +170,13 @@ export function PublicPropertyInquiryForm({
         >
           Message <span className="text-muted-foreground">(optional)</span>
         </label>
-        <textarea
+        <Textarea
           id="inquiry-message"
           name="message"
           rows={3}
           maxLength={2000}
           placeholder="I'd like to know more about this property..."
-          className="w-full resize-y rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="w-full px-3 "
         />
       </div>
 
@@ -183,7 +186,7 @@ export function PublicPropertyInquiryForm({
         className="absolute -left-[10000px] top-auto size-px overflow-hidden"
       >
         <label htmlFor="inquiry-website">Website</label>
-        <input
+        <Input
           id="inquiry-website"
           name="website"
           tabIndex={-1}
@@ -197,10 +200,11 @@ export function PublicPropertyInquiryForm({
         </p>
       )}
 
-      <button
+      <Button
         type="submit"
         disabled={pending}
-        className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+       
+        className="inline-flex h-11 w-full"
       >
         {pending ? (
           <LoaderCircle
@@ -211,7 +215,7 @@ export function PublicPropertyInquiryForm({
           <Send className="size-4" aria-hidden="true" />
         )}
         {pending ? "Sending inquiry..." : "Send inquiry"}
-      </button>
+      </Button>
 
       <p className="text-xs leading-5 text-muted-foreground">
         Your details will be shared with the agency so they can respond
